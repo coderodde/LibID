@@ -76,6 +76,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                 return state.buildPath(meetingNode);
             }
             
+            state.backwardSearchStack.clear();
             state.checkNewNodesExploredInBackwardSearch();
             state.previousReachedNodesInBackwardSearch =
                     state.reachedNodesInBackwardSearch;
@@ -88,6 +89,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                 return state.buildPath(meetingNode);
             }
             
+            state.backwardSearchStack.clear();
             // Wipe out the frontier.
             state.frontier.clear();
         }
@@ -115,6 +117,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                 return node;
             }
             
+            backwardSearchStack.removeLast();
             return null;
         }
         
@@ -123,11 +126,10 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             
             if (meetingNode != null) {
                 return meetingNode;
-            }
+            } 
         }
         
         backwardSearchStack.removeFirst();
-        System.out.println(backwardSearchStack.size());
         return null;
     }
     

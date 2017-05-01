@@ -81,7 +81,7 @@ public final class Demo {
                             new DirectedGraphNodeForwardExpander(), 
                             new DirectedGraphNodeBackwardExpander());
         } catch (Exception ex) {
-            throw ex;
+            
         }
         
         end = System.currentTimeMillis();

@@ -1,42 +1,37 @@
 package net.coderodde.libid.support;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
-import net.coderodde.libid.SlidingTilePathFinder;
+import net.coderodde.libid.NodeExpander;
 import net.coderodde.libid.SlidingTilePuzzleNode;
 
-public final class IterativeDeepeningDepthFirstSearch 
-        implements SlidingTilePathFinder {
+public final class IterativeDeepeningDepthFirstSearch<N> {
 
-    private final SlidingTilePuzzleNode source;
-    private final SlidingTilePuzzleNode target;
-    private final List<SlidingTilePuzzleNode> path;
-    private boolean found;
+    private final N target;
+    private final List<N> path;
+    private final NodeExpander<N> expander;
+    private boolean found = false;
     private int reachedNodes = 0;
     private int previousReachedNodes = 0;
     
     public IterativeDeepeningDepthFirstSearch() {
-        this.source = null;
         this.target = null;
         this.path = null;
+        this.expander = null;
     }
     
-    private IterativeDeepeningDepthFirstSearch(SlidingTilePuzzleNode source,
-                                               SlidingTilePuzzleNode target) {
-        this.source = Objects.requireNonNull(source, "source is null");
+    private IterativeDeepeningDepthFirstSearch(N target, 
+                                               NodeExpander<N> expander) {
         this.target = Objects.requireNonNull(target, "target is null");
         this.path = new ArrayList<>();
+        this.expander = expander;
     }
     
-    @Override
-    public List<SlidingTilePuzzleNode> 
-        search(SlidingTilePuzzleNode source, SlidingTilePuzzleNode target) {
+    public List<N> search(N source, N target, NodeExpander<N> expander) {
         IterativeDeepeningDepthFirstSearch state = 
-                new IterativeDeepeningDepthFirstSearch(source, target);
+                new IterativeDeepeningDepthFirstSearch(target, expander);
         
         for (int depth = 0;; ++depth) {
             state.depthLimitedSearch(source, depth);
@@ -55,7 +50,7 @@ public final class IterativeDeepeningDepthFirstSearch
         }
     }
     
-    private void depthLimitedSearch(SlidingTilePuzzleNode node, int depth) {
+    private void depthLimitedSearch(N node, int depth) {
         ++reachedNodes;
         
         if (depth == 0 && node.equals(target)) {
@@ -65,7 +60,7 @@ public final class IterativeDeepeningDepthFirstSearch
         }
         
         if (depth > 0) {
-            for (SlidingTilePuzzleNode child : node.getNeighbors()) {
+            for (N child : expander.expand(node)) {
                 depthLimitedSearch(child, depth - 1);
                 
                 if (found) {

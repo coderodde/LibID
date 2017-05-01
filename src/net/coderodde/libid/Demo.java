@@ -149,7 +149,7 @@ public final class Demo {
         return ret;
     }
         
-    private static final class DirectedGraphNode {
+    public static final class DirectedGraphNode {
         
         private final Set<DirectedGraphNode> children = new HashSet<>();
         private final Set<DirectedGraphNode> parents = new HashSet<>();
@@ -168,7 +168,7 @@ public final class Demo {
         }
     }
     
-    private static final class DirectedGraphNodeForwardExpander 
+    public static final class DirectedGraphNodeForwardExpander 
             implements NodeExpander<DirectedGraphNode> {
 
         @Override
@@ -177,7 +177,7 @@ public final class Demo {
         }
     }
     
-    private static final class DirectedGraphNodeBackwardExpander 
+    public static final class DirectedGraphNodeBackwardExpander 
             implements NodeExpander<DirectedGraphNode> {
 
         @Override

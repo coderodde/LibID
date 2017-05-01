@@ -12,7 +12,6 @@ import net.coderodde.libid.NodeExpander;
 public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
 
     private final N source;
-    private final Deque<N> forwardSearchStack;
     private final Deque<N> backwardSearchStack;
     private final Set<N> frontier;
     private final NodeExpander<N> forwardExpander;
@@ -25,7 +24,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     
     public BidirectionalIterativeDeepeningDepthFirstSearch() {
         this.source = null;
-        this.forwardSearchStack = null;
         this.backwardSearchStack = null;
         this.frontier = null;
         this.forwardExpander = null;
@@ -37,7 +35,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         NodeExpander<N> forwardExpander,
         NodeExpander<N> backwardExpander) {
         this.source = source;
-        this.forwardSearchStack = new ArrayDeque<>();
         this.backwardSearchStack = new ArrayDeque<>();
         this.frontier = new HashSet<>();
         this.forwardExpander = forwardExpander;
@@ -96,7 +93,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         }
     }
     
-    // OK!
     private void depthLimitedSearchForward(N node, int depth) {
         ++reachedNodesInForwardSearch;
         
@@ -131,6 +127,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         }
         
         backwardSearchStack.removeFirst();
+        System.out.println(backwardSearchStack.size());
         return null;
     }
     
@@ -150,10 +147,13 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     
     private List<N> buildPath(N meetingNode) {
         List<N> path = new ArrayList<>();
-        path.addAll(search(source, 
-                           meetingNode, 
-                           forwardExpander, 
-                           backwardExpander));
+        List<N> prefixPath = 
+                new BidirectionalIterativeDeepeningDepthFirstSearch<N>()
+                        .search(source, 
+                                meetingNode, 
+                                forwardExpander, 
+                                backwardExpander);
+        path.addAll(prefixPath);
         path.remove(path.size() - 1);
         path.addAll(backwardSearchStack);
         return path;

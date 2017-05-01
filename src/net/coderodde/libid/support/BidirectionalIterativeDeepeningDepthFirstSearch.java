@@ -1,9 +1,7 @@
 package net.coderodde.libid.support;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,21 +54,31 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             
             if (state.previousReachedNodesInForwardSearch == 
                     state.reachedNodesInForwardSearch) {
+                System.out.println("1: " + state.previousReachedNodesInForwardSearch + ", " +
+                        state.reachedNodesInForwardSearch);
                 throw new IllegalStateException("target not reachable");
             }
+            
+            state.previousReachedNodesInForwardSearch =
+                    state.reachedNodesInForwardSearch;
             
             // Perform a reversed search starting from the target node and 
             // recurring to the depth 'depth'.
             state.depthLimitedSearchBackward(target, depth);
             
             if (state.found) {
-                return buildPath();
+                return state.buildPath();
             }
             
             if (state.previousReachedNodesInBackwardSearch ==
                     state.reachedNodesInBackwardSearch) {
+                System.out.println("2: " + state.previousReachedNodesInBackwardSearch + ", " +
+                        state.reachedNodesInBackwardSearch);
                 throw new IllegalStateException("target not reachable");
             }
+            
+            state.previousReachedNodesInBackwardSearch =
+                    state.reachedNodesInBackwardSearch;
             
             // Perform a reversed search once again with depth = 'depth + 1'.
             // We need this in case the shortest path has odd number of arcs.
@@ -82,10 +90,15 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             
             if (state.previousReachedNodesInBackwardSearch ==
                     state.reachedNodesInBackwardSearch) {
+                System.out.println("3: " + state.previousReachedNodesInBackwardSearch + ", " +
+                        state.reachedNodesInBackwardSearch);
                 throw new IllegalStateException("target not reachable");
             }
             
-            frontier.clear();
+            state.previousReachedNodesInBackwardSearch =
+                    state.reachedNodesInBackwardSearch;
+            
+            state.frontier.clear();
         }
     }
     
@@ -113,7 +126,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         }
         
         for (N parent : backwardExpander.expand(node)) {
-            depthLimitedSearchForward(parent, depth - 1);
+            depthLimitedSearchBackward(parent, depth - 1);
         }
     }
     

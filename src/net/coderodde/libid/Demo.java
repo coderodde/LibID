@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.IntStream;
+import net.coderodde.libid.support.BidirectionalIterativeDeepeningDepthFirstSearch;
 import net.coderodde.libid.support.BreadthFirstSearch;
 import net.coderodde.libid.support.IterativeDeepeningDepthFirstSearch;
 
@@ -15,10 +16,12 @@ public final class Demo {
 
     private static final int SWAPS = 55;
     private static final int NODES = 5_000;
-    private static final int ARCS = 10_000;
+    private static final int ARCS = 15_000;
     
     public static void main(String[] args) {
-        long seed = 1493640492354L; System.currentTimeMillis(); // not reachable! = 1493640492354
+//        long seed = 1493640492354L; System.currentTimeMillis(); // not reachable! = 1493640492354
+        long seed = 1493644695514L; //System.currentTimeMillis(); // not reachable! = 1493640492354
+        // 1493644695514 strange shit.
         Random random = new Random(seed);
         
         List<DirectedGraphNode> nodeList = getRandomDigraph(NODES,
@@ -66,6 +69,27 @@ public final class Demo {
         System.out.println("BreadthFirstSearch in " + 
                 (end - start) + " milliseconds. Path length: " + 
                 (path2 != null ? path2.size() : "infinity"));
+        
+        start = System.currentTimeMillis();
+        List<DirectedGraphNode> path3 = null;
+        
+        try {
+            path3 = new BidirectionalIterativeDeepeningDepthFirstSearch
+                    <DirectedGraphNode>()
+                    .search(source, 
+                            target, 
+                            new DirectedGraphNodeForwardExpander(), 
+                            new DirectedGraphNodeBackwardExpander());
+        } catch (Exception ex) {
+            throw ex;
+        }
+        
+        end = System.currentTimeMillis();
+        
+        System.out.println(
+                "BidirectionalIterativeDeepeningDepthFirstSearch in " + 
+                (end - start) + " milliseconds. Path length: " + 
+                (path3 != null ? path3.size() : "infinity"));
         
 //        SlidingTilePathFinder finderIDDFS = 
 //                new IterativeDeepeningDepthFirstSearch();

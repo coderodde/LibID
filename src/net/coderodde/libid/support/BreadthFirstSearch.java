@@ -20,7 +20,7 @@ public class BreadthFirstSearch<N> {
             N current = queue.removeFirst();
             
             if (current.equals(target)) {
-                tracebackPath(current, parents);
+                return tracebackPath(current, parents);
             }
             
             for (N child : expander.expand(current)) {

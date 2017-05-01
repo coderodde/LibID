@@ -16,85 +16,8 @@ import net.coderodde.libid.Demo.DirectedGraphNodeBackwardExpander;
 
 public final class Demo {
 
-    private static final int SWAPS = 55;
-    private static final int NODES = 50_000;
-    private static final int ARCS = 150_000;
-    
     public static void main(String[] args) {
-        long seed = System.currentTimeMillis();
-        Random random = new Random(seed);
-        
-        List<DirectedGraphNode> nodeList = getRandomDigraph(NODES,
-                                                            ARCS, 
-                                                            random);
-        
-        DirectedGraphNode source = choose(nodeList, random);
-        DirectedGraphNode target = choose(nodeList, random);
-        
-        System.out.println("Seed = " + seed);
-        
-        warmupGeneralGraphBenchmark(nodeList, random);
-        benchmarkGeneralGraph(nodeList, random);
-        System.exit(0);
-        
-        long start = System.currentTimeMillis();
-        List<DirectedGraphNode> path1 = null;
-        
-        try {
-            path1 = new IterativeDeepeningDepthFirstSearch<DirectedGraphNode>()
-                        .search(source, 
-                                target, 
-                                new DirectedGraphNodeForwardExpander());
-        } catch (Exception ex) {
-            
-        }
-        
-        long end = System.currentTimeMillis();
-        
-        System.out.println("IterativeDeepeningDepthFirstSearch in " + 
-                (end - start) + " milliseconds. Path length: " + 
-                (path1 != null ? path1.size() : "infinity"));
-        
-        
-        start = System.currentTimeMillis();
-        List<DirectedGraphNode> path2 = null;
-        
-        try {
-            path2 = new BreadthFirstSearch<DirectedGraphNode>()
-                    .search(source, 
-                            target, 
-                            new DirectedGraphNodeForwardExpander());
-        } catch (Exception ex) {
-            
-        }
-        
-        end = System.currentTimeMillis();
-        
-        System.out.println("BreadthFirstSearch in " + 
-                (end - start) + " milliseconds. Path length: " + 
-                (path2 != null ? path2.size() : "infinity"));
-        
-        start = System.currentTimeMillis();
-        List<DirectedGraphNode> path3 = null;
-        
-        try {
-            path3 = new BidirectionalIterativeDeepeningDepthFirstSearch
-                    <DirectedGraphNode>()
-                    .search(source, 
-                            target, 
-                            new DirectedGraphNodeForwardExpander(), 
-                            new DirectedGraphNodeBackwardExpander());
-        } catch (Exception ex) {
-            
-        }
-        
-        end = System.currentTimeMillis();
-        
-        System.out.println(
-                "BidirectionalIterativeDeepeningDepthFirstSearch in " + 
-                (end - start) + " milliseconds. Path length: " + 
-                (path3 != null ? path3.size() : "infinity"));
-        
+        runGeneralGraphBenchmark();
 //        SlidingTilePathFinder finderIDDFS = 
 //                new IterativeDeepeningDepthFirstSearch();
 //        SlidingTilePuzzleNode target = new SlidingTilePuzzleNode();
@@ -225,7 +148,7 @@ public final class Demo {
         long end = System.currentTimeMillis();
         
         System.out.println(
-                "BidirectionalIterativeDeepeningDepthFirstSearch in " + 
+                finder1.getClass().getSimpleName() + " in " + 
                 (end - start) + " milliseconds. Path length: " + 
                 (path1 != null ? path1.size() : "infinity"));
             
@@ -242,7 +165,7 @@ public final class Demo {
         end = System.currentTimeMillis();
         
         System.out.println(
-                "IterativeDeepeningDepthFirstSearch in " + 
+                finder2.getClass().getSimpleName() + " in " + 
                 (end - start) + " milliseconds. Path length: " + 
                 (path2 != null ? path2.size() : "infinity"));
 
@@ -259,7 +182,7 @@ public final class Demo {
         end = System.currentTimeMillis();
         
         System.out.println(
-                "BreadthFirstSearch in " + 
+                finder3.getClass().getSimpleName() + " in " + 
                 (end - start) + " milliseconds. Path length: " + 
                 (path3 != null ? path3.size() : "infinity"));
     }

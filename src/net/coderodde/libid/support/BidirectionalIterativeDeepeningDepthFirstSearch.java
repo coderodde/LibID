@@ -17,10 +17,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     private final NodeExpander<N> forwardExpander;
     private final NodeExpander<N> backwardExpander;
     private boolean found = false;
-    private int reachedNodesInForwardSearch          = 0;
-    private int previousReachedNodesInForwardSearch  = 0;
-    private int reachedNodesInBackwardSearch         = 0;
-    private int previousReachedNodesInBackwardSearch = 0;
     
     public BidirectionalIterativeDeepeningDepthFirstSearch() {
         this.source = null;
@@ -61,15 +57,10 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         for (int depth = 0;; ++depth) {
             // Do a depth limited search in forward direction. Put all nodes at 
             // depth == 0 to the frontier.
-            state.reachedNodesInForwardSearch = 0;
             state.depthLimitedSearchForward(source, depth);
-            state.checkNewNodesExploredInForwardSearch();
-            state.previousReachedNodesInForwardSearch =
-                    state.reachedNodesInForwardSearch;
             
             // Perform a reversed search starting from the target node and 
             // recurring to the depth 'depth'.
-            state.reachedNodesInBackwardSearch = 0;
             N meetingNode = state.depthLimitedSearchBackward(target, depth);
             
             if (meetingNode != null) {
@@ -77,9 +68,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             }
             
             state.backwardSearchStack.clear();
-            state.checkNewNodesExploredInBackwardSearch();
-            state.previousReachedNodesInBackwardSearch =
-                    state.reachedNodesInBackwardSearch;
             
             // Perform a reversed search once again with depth = 'depth + 1'.
             // We need this in case the shortest path has odd number of arcs.
@@ -96,8 +84,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     }
     
     private void depthLimitedSearchForward(N node, int depth) {
-        ++reachedNodesInForwardSearch;
-        
         if (depth == 0) {
             frontier.add(node);
             return;
@@ -109,7 +95,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     }
     
     private N depthLimitedSearchBackward(N node, int depth) {
-        ++reachedNodesInBackwardSearch;
         backwardSearchStack.addFirst(node);
         
         if (depth == 0) {
@@ -131,20 +116,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         
         backwardSearchStack.removeFirst();
         return null;
-    }
-    
-    private void checkNewNodesExploredInForwardSearch() {
-        if (previousReachedNodesInForwardSearch == 
-                reachedNodesInForwardSearch) {
-            throw new IllegalStateException("target not reachable");
-        }
-    }
-    
-    private void checkNewNodesExploredInBackwardSearch() {
-        if (previousReachedNodesInBackwardSearch == 
-                reachedNodesInBackwardSearch) {
-            throw new IllegalStateException("target not reachable");
-        }
     }
     
     private List<N> buildPath(N meetingNode) {

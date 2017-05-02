@@ -52,9 +52,9 @@ public final class Demo {
         benchmarkGeneralGraph(nodeList, random);
     }
     
-    private static final int BENCHMARK_NODES = 10_000;
-    private static final int BENCHMARK_ARCS = 50_000;
-    private static final int WARMUP_ITERATIONS = 20;
+    private static final int BENCHMARK_NODES = 1000;
+    private static final int BENCHMARK_ARCS = 400_000;
+    private static final int WARMUP_ITERATIONS = 2;
     
     private static void warmupGeneralGraphBenchmark(
             List<DirectedGraphNode> nodeList, Random random) {

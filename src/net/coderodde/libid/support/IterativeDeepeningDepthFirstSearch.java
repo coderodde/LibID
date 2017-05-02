@@ -13,8 +13,6 @@ public final class IterativeDeepeningDepthFirstSearch<N> {
     private final List<N> path;
     private final NodeExpander<N> expander;
     private boolean found = false;
-    private int reachedNodes = 0;
-    private int previousReachedNodes = 0;
     
     public IterativeDeepeningDepthFirstSearch() {
         this.target = null;
@@ -40,19 +38,10 @@ public final class IterativeDeepeningDepthFirstSearch<N> {
                 Collections.<SlidingTilePuzzleNode>reverse(state.path);
                 return state.path;
             }
-            
-            if (state.reachedNodes == state.previousReachedNodes) {
-                throw new IllegalStateException("target not reachable");
-            }
-            
-            state.previousReachedNodes = state.reachedNodes;
-            state.reachedNodes = 0;
         }
     }
     
     private void depthLimitedSearch(N node, int depth) {
-        ++reachedNodes;
-        
         if (depth == 0 && node.equals(target)) {
             found = true;
             path.add(node);

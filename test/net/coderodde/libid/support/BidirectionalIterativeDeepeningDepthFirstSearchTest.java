@@ -1,6 +1,7 @@
 package net.coderodde.libid.support;
 
 import java.util.List;
+import net.coderodde.libid.Demo;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import net.coderodde.libid.Demo.DirectedGraphNode;

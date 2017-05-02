@@ -167,17 +167,15 @@ public final class SlidingTilePuzzleNode {
     
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        String lineSeparator = "";
+        StringBuilder sb = new StringBuilder("\n");
         int index = 0;
 
         for (int y = 0; y < 3; ++y) {
-            sb.append(lineSeparator);
-            lineSeparator = "\n";
-            
             for (int x = 0; x < 3; ++x) {
                 sb.append(state[index++]);
             }
+            
+            sb.append("\n");
         }
 
         return sb.toString();

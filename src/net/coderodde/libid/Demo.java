@@ -17,7 +17,8 @@ import net.coderodde.libid.Demo.DirectedGraphNodeBackwardExpander;
 public final class Demo {
 
     public static void main(String[] args) {
-        runGeneralGraphBenchmark();
+        run8PuzzleGraphBenchmark();
+//        runGeneralGraphBenchmark();
 //        SlidingTilePathFinder finderIDDFS = 
 //                new IterativeDeepeningDepthFirstSearch();
 //        SlidingTilePuzzleNode target = new SlidingTilePuzzleNode();
@@ -40,6 +41,114 @@ public final class Demo {
 //        }
     }
     
+    private static final int MOVES = 10;
+    
+    private static void run8PuzzleGraphBenchmark() {
+        System.out.println("*** 8-puzzle graph benchmark ***");
+        long seed = 1493734337448L; System.currentTimeMillis();
+        Random random = new Random(seed);
+        
+        warmup8PuzzleGraphBenchmark(random);
+        
+        System.out.println("Seed = " + seed);
+        SlidingTilePuzzleNode target = new SlidingTilePuzzleNode();
+        SlidingTilePuzzleNode source = getRandomSourceNode(MOVES, random);
+        SlidingTilePuzzleNodeExpander expander =  
+                new SlidingTilePuzzleNodeExpander();
+        
+        BreadthFirstSearch<SlidingTilePuzzleNode> finder1;
+        IterativeDeepeningDepthFirstSearch<SlidingTilePuzzleNode> finder2;
+        BidirectionalIterativeDeepeningDepthFirstSearch
+                <SlidingTilePuzzleNode> finder3;
+        
+        finder1 = new BreadthFirstSearch<>();
+        finder2 = new IterativeDeepeningDepthFirstSearch<>();
+        finder3 = new BidirectionalIterativeDeepeningDepthFirstSearch<>();
+        
+        long start = System.currentTimeMillis();
+        List<SlidingTilePuzzleNode> path1 = finder1.search(source,
+                                                           target, 
+                                                           expander);
+        long end = System.currentTimeMillis();
+        
+        System.out.println(finder1.getClass().getSimpleName() + " in " +
+                (end - start) + " milliseconds. Path length: " + path1.size());
+        
+        start = System.currentTimeMillis();
+        List<SlidingTilePuzzleNode> path2 = finder2.search(source,
+                                                           target, 
+                                                           expander);
+        end = System.currentTimeMillis();
+        
+        System.out.println(finder2.getClass().getSimpleName() + " in " +
+                (end - start) + " milliseconds. Path length: " + path2.size());
+        
+        start = System.currentTimeMillis();
+        List<SlidingTilePuzzleNode> path3 = finder3.search(source,
+                                                           target, 
+                                                           expander,
+                                                           expander);
+        end = System.currentTimeMillis();
+        
+        System.out.println(finder3.getClass().getSimpleName() + " in " +
+                (end - start) + " milliseconds. Path length: " + path3.size());
+        
+        System.out.println("Algorithms agree: " + 
+                tilePathsEqual(path1, path2, path3));
+        
+        System.out.println("1.");
+        System.out.println(path1);
+        System.out.println("2.");
+        System.out.println(path2);
+        System.out.println("3.");
+        System.out.println(path3);
+    }
+    
+    private static boolean
+         tilePathsEqual(List<SlidingTilePuzzleNode>... paths) {
+        for (int i = 0; i < paths.length - 1; ++i) {
+            if (paths[i].size() != paths[i + 1].size()) {
+                return false;
+            }
+        }
+        
+        int lastIndex = paths[0].size() - 1;
+        
+        for (int i = 0; i < paths.length - 1; ++i) {
+            if (!paths[i].get(0).equals(paths[i + 1].get(0))) {
+                return false;
+            }
+        }
+        
+        for (int i = 0; i < paths.length - 1; ++i) {
+            if (!paths[i].get(lastIndex).equals(paths[i + 1].get(lastIndex))) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private static void warmup8PuzzleGraphBenchmark(Random random) {
+        SlidingTilePuzzleNode target = new SlidingTilePuzzleNode();
+        SlidingTilePuzzleNode source = new SlidingTilePuzzleNode();
+        NodeExpander<SlidingTilePuzzleNode> expander = 
+                new SlidingTilePuzzleNodeExpander();
+        
+        for (int iteration = 0; iteration < WARMUP_ITERATIONS; ++iteration) {
+            source = getRandomSourceNode(MOVES, random);
+            new BreadthFirstSearch<SlidingTilePuzzleNode>()
+                    .search(source, target, expander);
+            
+            new IterativeDeepeningDepthFirstSearch<SlidingTilePuzzleNode>()
+                    .search(source, target, expander);
+            
+            new BidirectionalIterativeDeepeningDepthFirstSearch
+                    <SlidingTilePuzzleNode>()
+                    .search(source, target, expander, expander);
+        }
+    }
+    
     private static void runGeneralGraphBenchmark() {
         System.out.println("*** General graph benchmark ***");
         long seed = System.currentTimeMillis();
@@ -54,7 +163,7 @@ public final class Demo {
     
     private static final int BENCHMARK_NODES = 1000;
     private static final int BENCHMARK_ARCS = 400_000;
-    private static final int WARMUP_ITERATIONS = 2;
+    private static final int WARMUP_ITERATIONS = 10;
     
     private static void warmupGeneralGraphBenchmark(
             List<DirectedGraphNode> nodeList, Random random) {
@@ -185,6 +294,15 @@ public final class Demo {
                 finder3.getClass().getSimpleName() + " in " + 
                 (end - start) + " milliseconds. Path length: " + 
                 (path3 != null ? path3.size() : "infinity"));
+    }
+    
+    private static final class SlidingTilePuzzleNodeExpander 
+            implements NodeExpander<SlidingTilePuzzleNode> {
+
+        @Override
+        public Collection<SlidingTilePuzzleNode> expand(SlidingTilePuzzleNode node) {
+            return node.getNeighbors();
+        }
     }
     
     private static SlidingTilePuzzleNode 

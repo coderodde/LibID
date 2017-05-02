@@ -71,7 +71,7 @@ public final class IterativeDeepeningAStar<N, D> {
             return 0;
         }
         
-        int min = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
         
         for (N child : expander.expand(node)) {
             int t = search(child, g + 1, bound);

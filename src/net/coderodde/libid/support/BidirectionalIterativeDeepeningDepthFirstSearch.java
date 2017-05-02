@@ -16,7 +16,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     private final Set<N> frontier;
     private final NodeExpander<N> forwardExpander;
     private final NodeExpander<N> backwardExpander;
-    private boolean found = false;
     
     public BidirectionalIterativeDeepeningDepthFirstSearch() {
         this.source = null;
@@ -41,12 +40,11 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                           N target, 
                           NodeExpander<N> forwardExpander,
                           NodeExpander<N> backwardExpander) {
-        // Handle the easy cases:
+        // Handle the easy case. We need this in order to terminate the 
+        // recursion in buildPath.
         if (source.equals(target)) {
             return new ArrayList<>(Arrays.asList(source));
-        } else if (forwardExpander.expand(source).contains(target)) {
-            return new ArrayList<>(Arrays.asList(source, target));
-        }
+        } 
         
         BidirectionalIterativeDeepeningDepthFirstSearch<N> state = 
                 new BidirectionalIterativeDeepeningDepthFirstSearch<>(

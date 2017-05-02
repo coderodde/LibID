@@ -1,7 +1,6 @@
 package net.coderodde.libid.support;
 
 import java.util.List;
-import net.coderodde.libid.Demo;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import net.coderodde.libid.Demo.DirectedGraphNode;
@@ -12,6 +11,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
     
     @Test
     public void testSearchSmall() {
+        System.out.println("yo?");
         DirectedGraphNode a = new DirectedGraphNode();
         DirectedGraphNode b1 = new DirectedGraphNode();
         DirectedGraphNode b2 = new DirectedGraphNode();
@@ -37,6 +37,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                                 new DirectedGraphNodeBackwardExpander());
         
         assertEquals(4, path.size());
+        System.out.println("yo!");
     }
     
     @Test

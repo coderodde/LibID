@@ -39,15 +39,19 @@ public final class IterativeDeepeningAStar<N, D> {
                           N target, 
                           NodeExpander<N> expander, 
                           IntHeuristicFunction<N> heuristicFunction) {
-        IterativeDeepeningAStar<N, D> state = new IterativeDeepeningAStar<>();
+        IterativeDeepeningAStar<N, D> state = 
+                new IterativeDeepeningAStar<>(target,
+                                              heuristicFunction, 
+                                              expander);
+        
         int bound = heuristicFunction.estimate(source, target);
         
         while (true) {
             int t = state.search(source, 0, bound);
             
             if (state.status == FOUND) {
-                Collections.<N>reverse(path);
-                return path;
+                Collections.<N>reverse(state.path);
+                return state.path;
             }
             
             if (t == Integer.MAX_VALUE) {

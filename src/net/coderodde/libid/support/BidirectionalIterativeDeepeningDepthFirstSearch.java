@@ -44,7 +44,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         // recursion in buildPath.
         if (source.equals(target)) {
             return new ArrayList<>(Arrays.asList(source));
-        } 
+        }
         
         BidirectionalIterativeDeepeningDepthFirstSearch<N> state = 
                 new BidirectionalIterativeDeepeningDepthFirstSearch<>(
@@ -100,7 +100,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                 return node;
             }
             
-            backwardSearchStack.removeLast();
+            backwardSearchStack.removeFirst();
             return null;
         }
         

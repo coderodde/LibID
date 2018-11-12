@@ -24,7 +24,7 @@ public final class Demo {
         runGeneralGraphBenchmark();
     }
     
-    private static final int MOVES = 40;
+    private static final int MOVES = 80;
     
     private static void run8PuzzleGraphBenchmark() {
         System.out.println("*** 8-puzzle graph benchmark ***");
@@ -157,8 +157,8 @@ public final class Demo {
         benchmarkGeneralGraph(nodeList, random);
     }
     
-    private static final int BENCHMARK_NODES = 1000;
-    private static final int BENCHMARK_ARCS = 400_000;
+    private static final int BENCHMARK_NODES = 5000;
+    private static final int BENCHMARK_ARCS = 3_000_000;
     private static final int WARMUP_ITERATIONS = 10;
     
     private static void warmupGeneralGraphBenchmark(

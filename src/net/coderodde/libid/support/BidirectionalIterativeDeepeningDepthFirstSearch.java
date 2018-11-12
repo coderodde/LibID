@@ -18,22 +18,22 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     private final NodeExpander<N> backwardExpander;
     
     public BidirectionalIterativeDeepeningDepthFirstSearch() {
-        this.source = null;
+        this.source              = null;
         this.backwardSearchStack = null;
-        this.frontier = null;
-        this.forwardExpander = null;
-        this.backwardExpander = null;
+        this.frontier            = null;
+        this.forwardExpander     = null;
+        this.backwardExpander    = null;
     }
     
     private BidirectionalIterativeDeepeningDepthFirstSearch(
         N source,
         NodeExpander<N> forwardExpander,
         NodeExpander<N> backwardExpander) {
-        this.source = source;
+        this.source              = source;
         this.backwardSearchStack = new ArrayDeque<>();
-        this.frontier = new HashSet<>();
-        this.forwardExpander = forwardExpander;
-        this.backwardExpander = backwardExpander;
+        this.frontier            = new HashSet<>();
+        this.forwardExpander     = forwardExpander;
+        this.backwardExpander    = backwardExpander;
     }
     
     public List<N> search(N source, 

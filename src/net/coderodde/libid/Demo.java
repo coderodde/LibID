@@ -1,3 +1,4 @@
+
 package net.coderodde.libid;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public final class Demo {
         runGeneralGraphBenchmark();
     }
     
-    private static final int MOVES = 80;
+    private static final int MOVES = 49;
     
     private static void run8PuzzleGraphBenchmark() {
         System.out.println("*** 8-puzzle graph benchmark ***");
@@ -157,8 +158,8 @@ public final class Demo {
         benchmarkGeneralGraph(nodeList, random);
     }
     
-    private static final int BENCHMARK_NODES = 5000;
-    private static final int BENCHMARK_ARCS = 3_000_000;
+    private static final int BENCHMARK_NODES = 200_000;
+    private static final int BENCHMARK_ARCS = 30_000_000;
     private static final int WARMUP_ITERATIONS = 10;
     
     private static void warmupGeneralGraphBenchmark(

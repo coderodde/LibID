@@ -12,7 +12,7 @@ public final class SlidingTilePuzzleNode {
     private int zeroTileIndex;
 
     public SlidingTilePuzzleNode() {
-        this.state = new int[9];
+        this.state = new int[16];
         
         for (int i = 0; i < state.length - 1; ++i) {
             state[i] = i + 1;
@@ -49,7 +49,7 @@ public final class SlidingTilePuzzleNode {
         int x = getX(zeroTileIndex);
         int y = getY(zeroTileIndex);
 
-        if (y == 2) {
+        if (y == 3) {
             return null;
         }
 
@@ -87,7 +87,7 @@ public final class SlidingTilePuzzleNode {
         int x = getX(zeroTileIndex);
         int y = getY(zeroTileIndex);
 
-        if (x == 2) {
+        if (x == 3) {
             return null;
         }
 
@@ -170,8 +170,8 @@ public final class SlidingTilePuzzleNode {
         StringBuilder sb = new StringBuilder("\n");
         int index = 0;
 
-        for (int y = 0; y < 3; ++y) {
-            for (int x = 0; x < 3; ++x) {
+        for (int y = 0; y < 4; ++y) {
+            for (int x = 0; x < 4; ++x) {
                 sb.append(state[index++]);
             }
             
@@ -182,14 +182,14 @@ public final class SlidingTilePuzzleNode {
     }
 
     private static int getX(int index) {
-        return index % 3;
+        return index % 4;
     }
 
     private static int getY(int index) {
-        return index / 3;
+        return index / 4;
     }
 
     private static int xyToIndex(int x, int y) {
-        return y * 3 + x;
+        return y * 4 + x;
     }
 }

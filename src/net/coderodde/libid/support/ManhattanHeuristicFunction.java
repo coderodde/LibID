@@ -6,24 +6,24 @@ import net.coderodde.libid.IntHeuristicFunction;
 public class ManhattanHeuristicFunction 
         implements IntHeuristicFunction<SlidingTilePuzzleNode> {
 
-    private final int[] xs = new int[9];
-    private final int[] ys = new int[9];
+    private final int[] xs = new int[16];
+    private final int[] ys = new int[16];
     
     @Override
     public int estimate(SlidingTilePuzzleNode current, 
                         SlidingTilePuzzleNode target) {
         int cost = 0;
         
-        for (int y = 0; y < 3; ++y) {
-            for (int x = 0; x < 3; ++x) {
+        for (int y = 0; y < 4; ++y) {
+            for (int x = 0; x < 4; ++x) {
                 int number = current.readTile(x, y);
                 xs[number] = x;
                 ys[number] = y;
             }
         }
         
-        for (int y = 0; y < 3; ++y) {
-            for (int x = 0; x < 3; ++x) {
+        for (int y = 0; y < 4; ++y) {
+            for (int x = 0; x < 4; ++x) {
                 int number = target.readTile(x, y);
                 
                 if (number == 0) {

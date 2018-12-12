@@ -14,21 +14,22 @@ import net.coderodde.libid.support.BreadthFirstSearch;
 import net.coderodde.libid.support.IterativeDeepeningDepthFirstSearch;
 import net.coderodde.libid.Demo.DirectedGraphNodeForwardExpander;
 import net.coderodde.libid.Demo.DirectedGraphNodeBackwardExpander;
+import net.coderodde.libid.support.BidirectionalBreadthFirstSearch;
 import net.coderodde.libid.support.IterativeDeepeningAStar;
 import net.coderodde.libid.support.ManhattanHeuristicFunction;
 
 public final class Demo {
 
     public static void main(String[] args) {
-        run8PuzzleGraphBenchmark();
+        run15PuzzleGraphBenchmark();
         System.out.println();
         runGeneralGraphBenchmark();
     }
     
-    private static final int MOVES = 49;
+    private static final int MOVES = 45;
     
-    private static void run8PuzzleGraphBenchmark() {
-        System.out.println("*** 8-puzzle graph benchmark ***");
+    private static void run15PuzzleGraphBenchmark() {
+        System.out.println("*** 15-puzzle graph benchmark ***");
         long seed =  System.currentTimeMillis();
         Random random = new Random(seed);
         
@@ -50,11 +51,14 @@ public final class Demo {
        
         IterativeDeepeningAStar<SlidingTilePuzzleNode, Integer> finder4;
         
+        BidirectionalBreadthFirstSearch<SlidingTilePuzzleNode> finder5;
+        
         // Construct finders:
         finder1 = new BreadthFirstSearch<>();
         finder2 = new IterativeDeepeningDepthFirstSearch<>();
         finder3 = new BidirectionalIterativeDeepeningDepthFirstSearch<>();
         finder4 = new IterativeDeepeningAStar<>();
+        finder5 = new BidirectionalBreadthFirstSearch<>();
         
         long start = System.currentTimeMillis();
         List<SlidingTilePuzzleNode> path1 = finder1.search(source,
@@ -95,8 +99,18 @@ public final class Demo {
         System.out.println(finder4.getClass().getSimpleName() + " in " +
                 (end - start) + " milliseconds. Path length: " + path4.size());
         
+        start = System.currentTimeMillis();
+        
+        List<SlidingTilePuzzleNode> path5 = 
+                finder5.search(source, target, expander, expander);
+        
+        end = System.currentTimeMillis();
+        
+        System.out.println(finder5.getClass().getSimpleName() + " in " +
+                (end - start) + " milliseconds. Path length: " + path5.size());
+        
         System.out.println("Algorithms agree: " + 
-                tilePathsEqual(path1, path2, path3, path4));
+                tilePathsEqual(path1, path2, path3, path4, path5));
     }
     
     private static boolean
@@ -148,7 +162,7 @@ public final class Demo {
     
     private static void runGeneralGraphBenchmark() {
         System.out.println("*** General graph benchmark ***");
-        long seed = System.currentTimeMillis();
+        long seed = 1544622684594L; //System.currentTimeMillis();
         Random random = new Random(seed);
         List<DirectedGraphNode> nodeList = getRandomDigraph(BENCHMARK_NODES,
                                                             BENCHMARK_ARCS,
@@ -158,8 +172,8 @@ public final class Demo {
         benchmarkGeneralGraph(nodeList, random);
     }
     
-    private static final int BENCHMARK_NODES = 200_000;
-    private static final int BENCHMARK_ARCS = 30_000_000;
+    private static final int BENCHMARK_NODES = 1_000_000;
+    private static final int BENCHMARK_ARCS = 8_000_000;
     private static final int WARMUP_ITERATIONS = 10;
     
     private static void warmupGeneralGraphBenchmark(
@@ -175,6 +189,9 @@ public final class Demo {
         
         BreadthFirstSearch<DirectedGraphNode> finder3 = 
                 new BreadthFirstSearch<>();
+        
+        BidirectionalBreadthFirstSearch<DirectedGraphNode> finder4 =
+                new BidirectionalBreadthFirstSearch<>();
         
         NodeExpander<DirectedGraphNode> forwardExpander = 
                 new DirectedGraphNodeForwardExpander();
@@ -210,6 +227,15 @@ public final class Demo {
             } catch (Exception ex) {
                 
             }
+            
+            try {
+                finder4.search(source, 
+                               target, 
+                               forwardExpander,
+                               backwardExpander);
+            } catch (Exception ex) {
+                
+            }
         }
         
         System.out.println("Warming up done!");
@@ -230,6 +256,9 @@ public final class Demo {
         BreadthFirstSearch<DirectedGraphNode> finder3 = 
                 new BreadthFirstSearch<>();
         
+        BidirectionalBreadthFirstSearch<DirectedGraphNode> finder4 = 
+                new BidirectionalBreadthFirstSearch<>();
+        
         NodeExpander<DirectedGraphNode> forwardExpander = 
                 new DirectedGraphNodeForwardExpander();
         
@@ -239,6 +268,7 @@ public final class Demo {
         List<DirectedGraphNode> path1 = null;
         List<DirectedGraphNode> path2 = null;
         List<DirectedGraphNode> path3 = null;
+        List<DirectedGraphNode> path4 = null;
             
         long start = System.currentTimeMillis();
         
@@ -252,6 +282,7 @@ public final class Demo {
         }
         
         long end = System.currentTimeMillis();
+        long endMemory = Runtime.getRuntime().totalMemory();
         
         System.out.println(
                 finder1.getClass().getSimpleName() + " in " + 
@@ -274,7 +305,7 @@ public final class Demo {
                 finder2.getClass().getSimpleName() + " in " + 
                 (end - start) + " milliseconds. Path length: " + 
                 (path2 != null ? path2.size() : "infinity"));
-
+        
         start = System.currentTimeMillis();
         
         try {
@@ -286,12 +317,57 @@ public final class Demo {
         }
         
         end = System.currentTimeMillis();
+        endMemory = Runtime.getRuntime().totalMemory();
         
         System.out.println(
                 finder3.getClass().getSimpleName() + " in " + 
                 (end - start) + " milliseconds. Path length: " + 
                 (path3 != null ? path3.size() : "infinity"));
+        
+        start = System.currentTimeMillis();
+        
+        try {
+            path4 = finder4.search(source, 
+                                  target, 
+                                  forwardExpander,
+                                  backwardExpander);
+        } catch (Exception ex) {
+
+        }
+        
+        end = System.currentTimeMillis();
+        endMemory = Runtime.getRuntime().totalMemory();
+        
+        System.out.println(
+                finder4.getClass().getSimpleName() + " in " + 
+                (end - start) + " milliseconds. Path length: " + 
+                (path3 != null ? path4.size() : "infinity"));
+        
+        System.out.println("Algorithms agree: " + 
+                           undirectedGraphAlgosAgree(path1, path2, path3, path4));
     }
+    
+    private static final boolean 
+        undirectedGraphAlgosAgree(List<DirectedGraphNode>... paths) {
+        for (int i = 0, j = 1; j < paths.length; i++, j++) {
+            if (paths[i].size() != paths[j].size()) {
+                return false;
+            }
+            
+            if (!paths[i].get(0).equals(paths[j].get(0))) {
+                return false;
+            }
+            
+            int len = paths[0].size();
+            
+            if (!paths[i].get(len - 1).equals(paths[j].get(len - 1))) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+        
     
     private static final class SlidingTilePuzzleNodeExpander 
             implements NodeExpander<SlidingTilePuzzleNode> {

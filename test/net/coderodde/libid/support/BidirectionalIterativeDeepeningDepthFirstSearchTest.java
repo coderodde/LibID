@@ -11,7 +11,6 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
     
     @Test
     public void testSearchSmall() {
-        System.out.println("yo?");
         DirectedGraphNode a = new DirectedGraphNode();
         DirectedGraphNode b1 = new DirectedGraphNode();
         DirectedGraphNode b2 = new DirectedGraphNode();
@@ -37,7 +36,6 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                                 new DirectedGraphNodeBackwardExpander());
         
         assertEquals(4, path.size());
-        System.out.println("yo!");
     }
     
     @Test
@@ -89,5 +87,24 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                                 new DirectedGraphNodeBackwardExpander());
         
         assertEquals(3, path.size());
+    }
+    
+    @Test
+    public void testSearchOnDisconnected() {
+        DirectedGraphNode a1 = new DirectedGraphNode();
+        DirectedGraphNode a2 = new DirectedGraphNode();
+        DirectedGraphNode b1 = new DirectedGraphNode();
+        DirectedGraphNode b2 = new DirectedGraphNode();
+        
+        a1.addChild(a2);
+        b1.addChild(b2);
+        
+        new BidirectionalIterativeDeepeningDepthFirstSearch<DirectedGraphNode>()
+                .search(a1, 
+                        b1, 
+                        new DirectedGraphNodeForwardExpander(), 
+                        new DirectedGraphNodeBackwardExpander());
+        
+        
     }
 }

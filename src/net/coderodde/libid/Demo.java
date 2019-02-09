@@ -15,18 +15,109 @@ import net.coderodde.libid.support.IterativeDeepeningDepthFirstSearch;
 import net.coderodde.libid.Demo.DirectedGraphNodeForwardExpander;
 import net.coderodde.libid.Demo.DirectedGraphNodeBackwardExpander;
 import net.coderodde.libid.support.BidirectionalBreadthFirstSearch;
+import net.coderodde.libid.support.GridHeuristicFunction;
 import net.coderodde.libid.support.IterativeDeepeningAStar;
 import net.coderodde.libid.support.ManhattanHeuristicFunction;
 
 public final class Demo {
 
     public static void main(String[] args) {
-        run15PuzzleGraphBenchmark();
+        runGridBenchmark();
         System.out.println();
+//        run15PuzzleGraphBenchmark();
+//        System.out.println();
         runGeneralGraphBenchmark();
     }
     
     private static final int MOVES = 45;
+    
+    private static void runGridBenchmark() {
+        final int width = 20;
+        final int height = 20;
+        DirectedGraphNode[][] grid = getGrid(width, height);
+        DirectedGraphNode sourceNode = grid[0][0];
+        DirectedGraphNode targetNode = grid[height - 1][width - 1];
+        GridHeuristicFunction gridHeuristicFunction = 
+                new GridHeuristicFunction();
+        DirectedGraphNodeForwardExpander forwardExpander =
+                new DirectedGraphNodeForwardExpander();
+        DirectedGraphNodeBackwardExpander backwardExpander =
+                new DirectedGraphNodeBackwardExpander();
+        
+        long startTime = System.currentTimeMillis();
+        
+        List<DirectedGraphNode> path1 = 
+                new IterativeDeepeningAStar<DirectedGraphNode>()
+                        .search(
+                                sourceNode, 
+                                targetNode, 
+                                new DirectedGraphNodeForwardExpander(), 
+                                gridHeuristicFunction);
+        
+        long endTime = System.currentTimeMillis();
+        
+        System.out.println(
+                "IterativeDeepeningAStar in " + (endTime - startTime) + 
+                " milliseconds. Path length: " + path1.size());
+        
+        startTime = System.currentTimeMillis();
+        
+        List<DirectedGraphNode> path2 = 
+                new BidirectionalIterativeDeepeningDepthFirstSearch
+                        <DirectedGraphNode>()
+                .search(sourceNode,
+                        targetNode, 
+                        forwardExpander, 
+                        backwardExpander);
+        
+        endTime = System.currentTimeMillis();
+        
+        System.out.println(
+                "BIDS in " + (endTime - startTime) + " milliseconds. " +
+                "Path length: " + path2.size());
+        
+        
+    }
+    
+    private static DirectedGraphNode[][] getGrid(int width, int height) {
+        DirectedGraphNode[][] grid = new DirectedGraphNode[height][width];
+        
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                grid[y][x] = new DirectedGraphNode(x, y);
+            }
+        }
+        
+        for (int y = 0; y < height - 1; y++) {
+            for (int x = 0; x < width; x++) {
+                grid[y][x].addChild(grid[y + 1][x]);
+                grid[y + 1][x].addChild(grid[y][x]);
+            }
+        }
+        
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width - 1; x++) {
+                grid[y][x].addChild(grid[y][x + 1]);
+                grid[y][x + 1].addChild(grid[y][x]);
+            }
+        }
+        
+        for (int y = 0; y < height - 1; y++) {
+            for (int x = 0; x < width - 1; x++) {
+                grid[y][x].addChild(grid[y + 1][x + 1]);
+                grid[y + 1][x + 1].addChild(grid[y][x]);
+            }
+        }
+        
+        for (int y = 1; y < height; y++) {
+            for (int x = 0; x < width - 1; x++) {
+                grid[y][x].addChild(grid[y - 1][x + 1]);
+                grid[y - 1][x + 1].addChild(grid[y][x]);
+            }
+        }
+        
+        return grid;
+    }
     
     private static void run15PuzzleGraphBenchmark() {
         System.out.println("*** 15-puzzle graph benchmark ***");
@@ -49,7 +140,7 @@ public final class Demo {
         BidirectionalIterativeDeepeningDepthFirstSearch
                 <SlidingTilePuzzleNode> finder3;
        
-        IterativeDeepeningAStar<SlidingTilePuzzleNode, Integer> finder4;
+        IterativeDeepeningAStar<SlidingTilePuzzleNode> finder4;
         
         BidirectionalBreadthFirstSearch<SlidingTilePuzzleNode> finder5;
         
@@ -163,45 +254,55 @@ public final class Demo {
     private static void runGeneralGraphBenchmark() {
         System.out.println("*** General graph benchmark ***");
         long seed = 1544622684594L; //System.currentTimeMillis();
+//        long seed = System.currentTimeMillis();
         Random random = new Random(seed);
-        List<DirectedGraphNode> nodeList = getRandomDigraph(BENCHMARK_NODES,
-                                                            BENCHMARK_ARCS,
-                                                            random);
+        List<GeneralDirectedGraphNode> nodeList = 
+                getRandomDigraph(BENCHMARK_NODES,
+                                 BENCHMARK_ARCS,
+                                 random);
+        
+        
         System.out.println("Seed = " + seed);
-        warmupGeneralGraphBenchmark(nodeList, random);
-        benchmarkGeneralGraph(nodeList, random);
+//        warmupGeneralGraphBenchmark(nodeList, random);
+        for (int i = 0; i < 10; i++) {
+            benchmarkGeneralGraph(nodeList, random);
+            System.out.println("-----");
+        }
     }
     
-    private static final int BENCHMARK_NODES = 1_000_000;
-    private static final int BENCHMARK_ARCS = 8_000_000;
+    private static final int BENCHMARK_NODES = 100_000;
+    private static final int BENCHMARK_ARCS = 1_000_000;
     private static final int WARMUP_ITERATIONS = 10;
     
     private static void warmupGeneralGraphBenchmark(
-            List<DirectedGraphNode> nodeList, Random random) {
+            List<GeneralDirectedGraphNode> nodeList, Random random) {
         System.out.println("Warming up...");
         
-        BidirectionalIterativeDeepeningDepthFirstSearch<DirectedGraphNode>
+        BidirectionalIterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode>
                 finder1 = 
                 new BidirectionalIterativeDeepeningDepthFirstSearch<>();
         
-        IterativeDeepeningDepthFirstSearch<DirectedGraphNode> finder2 = 
+        IterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode> finder2 = 
                 new IterativeDeepeningDepthFirstSearch<>();
         
-        BreadthFirstSearch<DirectedGraphNode> finder3 = 
+        BreadthFirstSearch<GeneralDirectedGraphNode> finder3 = 
                 new BreadthFirstSearch<>();
         
-        BidirectionalBreadthFirstSearch<DirectedGraphNode> finder4 =
+        BidirectionalBreadthFirstSearch<GeneralDirectedGraphNode> finder4 =
                 new BidirectionalBreadthFirstSearch<>();
         
-        NodeExpander<DirectedGraphNode> forwardExpander = 
-                new DirectedGraphNodeForwardExpander();
+        NodeExpander<GeneralDirectedGraphNode> forwardExpander = 
+                new GeneralDirectedGraphNodeForwardExpander();
         
-        NodeExpander<DirectedGraphNode> backwardExpander =
-                new DirectedGraphNodeBackwardExpander();
+        NodeExpander<GeneralDirectedGraphNode> backwardExpander =
+                new GeneralDirectedGraphNodeBackwardExpander();
         
         for (int iteration = 0; iteration < WARMUP_ITERATIONS; ++iteration) {
-            DirectedGraphNode source = choose(nodeList, random);
-            DirectedGraphNode target = choose(nodeList, random);
+            System.out.println("------------------------------------");
+            GeneralDirectedGraphNode source = choose(nodeList, random);
+            GeneralDirectedGraphNode target = choose(nodeList, random);
+            
+            long startTime = System.currentTimeMillis();
             
             try {
                 finder1.search(source, 
@@ -212,6 +313,12 @@ public final class Demo {
                 
             }
             
+            long endTime = System.currentTimeMillis();
+            System.out.println(finder1.getClass().getName() + " in " +
+                               (endTime - startTime) + " ms.");
+            
+            startTime = System.currentTimeMillis();
+            
             try {
                 finder2.search(source, 
                                target, 
@@ -219,6 +326,12 @@ public final class Demo {
             } catch (Exception ex) {
                 
             }
+            
+            endTime = System.currentTimeMillis();
+            System.out.println(finder2.getClass().getName() + " in " + 
+                               (endTime - startTime) + " ms.");
+            
+            startTime = System.currentTimeMillis();
             
             try {
                 finder3.search(source, 
@@ -228,6 +341,12 @@ public final class Demo {
                 
             }
             
+            endTime = System.currentTimeMillis();
+            System.out.println(finder3.getClass().getName() + " in " + 
+                               (endTime - startTime) + " ms.");
+            
+            startTime = System.currentTimeMillis();
+            
             try {
                 finder4.search(source, 
                                target, 
@@ -236,41 +355,47 @@ public final class Demo {
             } catch (Exception ex) {
                 
             }
+            
+            endTime = System.currentTimeMillis();
+            System.out.println(finder4.getClass().getName() + " in " + 
+                               (endTime - startTime) + " ms.");
         }
         
         System.out.println("Warming up done!");
     }
     
-    private static void benchmarkGeneralGraph(List<DirectedGraphNode> nodeList,
-                                              Random random) {
-        DirectedGraphNode source = choose(nodeList, random);
-        DirectedGraphNode target = choose(nodeList, random);
+    private static void benchmarkGeneralGraph(
+            List<GeneralDirectedGraphNode> nodeList,
+            Random random) {
+        LapTimer timer = new LapTimer();
+        GeneralDirectedGraphNode source = choose(nodeList, random);
+        GeneralDirectedGraphNode target = choose(nodeList, random);
         
-        BidirectionalIterativeDeepeningDepthFirstSearch<DirectedGraphNode>
+        BidirectionalIterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode>
                 finder1 = 
                 new BidirectionalIterativeDeepeningDepthFirstSearch<>();
         
-        IterativeDeepeningDepthFirstSearch<DirectedGraphNode> finder2 = 
+        IterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode> finder2 = 
                 new IterativeDeepeningDepthFirstSearch<>();
         
-        BreadthFirstSearch<DirectedGraphNode> finder3 = 
+        BreadthFirstSearch<GeneralDirectedGraphNode> finder3 = 
                 new BreadthFirstSearch<>();
         
-        BidirectionalBreadthFirstSearch<DirectedGraphNode> finder4 = 
+        BidirectionalBreadthFirstSearch<GeneralDirectedGraphNode> finder4 = 
                 new BidirectionalBreadthFirstSearch<>();
         
-        NodeExpander<DirectedGraphNode> forwardExpander = 
-                new DirectedGraphNodeForwardExpander();
+        NodeExpander<GeneralDirectedGraphNode> forwardExpander = 
+                new GeneralDirectedGraphNodeForwardExpander();
         
-        NodeExpander<DirectedGraphNode> backwardExpander =
-                new DirectedGraphNodeBackwardExpander();
+        NodeExpander<GeneralDirectedGraphNode> backwardExpander =
+                new GeneralDirectedGraphNodeBackwardExpander();
         
-        List<DirectedGraphNode> path1 = null;
-        List<DirectedGraphNode> path2 = null;
-        List<DirectedGraphNode> path3 = null;
-        List<DirectedGraphNode> path4 = null;
-            
-        long start = System.currentTimeMillis();
+        List<GeneralDirectedGraphNode> path1 = null;
+        List<GeneralDirectedGraphNode> path2 = null;
+        List<GeneralDirectedGraphNode> path3 = null;
+        List<GeneralDirectedGraphNode> path4 = null;
+        
+        timer.push();
         
         try {
             path1 = finder1.search(source, 
@@ -281,15 +406,12 @@ public final class Demo {
 
         }
         
-        long end = System.currentTimeMillis();
-        long endMemory = Runtime.getRuntime().totalMemory();
-        
         System.out.println(
-                finder1.getClass().getSimpleName() + " in " + 
-                (end - start) + " milliseconds. Path length: " + 
-                (path1 != null ? path1.size() : "infinity"));
+                finder1.getClass().getSimpleName() + timer + ". " +
+                        ". Path length: " + 
+                        (path1 != null ? path1.size() : "infinity"));
             
-        start = System.currentTimeMillis();
+        timer.push();
         
         try {
             path2 = finder2.search(source, 
@@ -299,32 +421,25 @@ public final class Demo {
 
         }
         
-        end = System.currentTimeMillis();
-        
         System.out.println(
-                finder2.getClass().getSimpleName() + " in " + 
-                (end - start) + " milliseconds. Path length: " + 
+                finder2.getClass().getSimpleName() + timer + ". Path length: " + 
                 (path2 != null ? path2.size() : "infinity"));
         
-        start = System.currentTimeMillis();
+        timer.push();
         
         try {
             path3 = finder3.search(source, 
-                                  target, 
-                                  forwardExpander);
+                                   target, 
+                                   forwardExpander);
         } catch (Exception ex) {
 
         }
         
-        end = System.currentTimeMillis();
-        endMemory = Runtime.getRuntime().totalMemory();
-        
         System.out.println(
-                finder3.getClass().getSimpleName() + " in " + 
-                (end - start) + " milliseconds. Path length: " + 
+                finder3.getClass().getName() + timer + ". Path length: " + 
                 (path3 != null ? path3.size() : "infinity"));
         
-        start = System.currentTimeMillis();
+        timer.push();
         
         try {
             path4 = finder4.search(source, 
@@ -335,20 +450,41 @@ public final class Demo {
 
         }
         
-        end = System.currentTimeMillis();
-        endMemory = Runtime.getRuntime().totalMemory();
-        
         System.out.println(
-                finder4.getClass().getSimpleName() + " in " + 
-                (end - start) + " milliseconds. Path length: " + 
+                finder4.getClass().getSimpleName() + timer + ". Path length: " + 
                 (path3 != null ? path4.size() : "infinity"));
         
         System.out.println("Algorithms agree: " + 
-                           undirectedGraphAlgosAgree(path1, path2, path3, path4));
+                           generalUndirectedGraphAlgosAgree(path1, 
+                                                            path2, 
+                                                            path3, 
+                                                            path4));
     }
     
-    private static final boolean 
+    private static boolean 
         undirectedGraphAlgosAgree(List<DirectedGraphNode>... paths) {
+        for (int i = 0, j = 1; j < paths.length; i++, j++) {
+            if (paths[i].size() != paths[j].size()) {
+                return false;
+            }
+            
+            if (!paths[i].get(0).equals(paths[j].get(0))) {
+                return false;
+            }
+            
+            int len = paths[0].size();
+            
+            if (!paths[i].get(len - 1).equals(paths[j].get(len - 1))) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private static boolean 
+        generalUndirectedGraphAlgosAgree(
+                List<GeneralDirectedGraphNode>... paths) {
         for (int i = 0, j = 1; j < paths.length; i++, j++) {
             if (paths[i].size() != paths[j].size()) {
                 return false;
@@ -413,11 +549,49 @@ public final class Demo {
         
         return ret;
     }
+    
+    public static final class GeneralDirectedGraphNode {
         
-    public static final class DirectedGraphNode {
+        private final Set<GeneralDirectedGraphNode> children = new HashSet<>();
+        private final Set<GeneralDirectedGraphNode> parents  = new HashSet<>();
+        
+        public Set<GeneralDirectedGraphNode> getChildren() {
+            return Collections.<GeneralDirectedGraphNode>unmodifiableSet(children);
+        }
+        
+        public Set<GeneralDirectedGraphNode> getParents() {
+            return Collections.<GeneralDirectedGraphNode>unmodifiableSet(parents);
+        }
+        
+        public void addChild(GeneralDirectedGraphNode other) {
+            children.add(other);
+            other.parents.add(this);
+        }
+    }
+        
+    public static class DirectedGraphNode {
         
         private final Set<DirectedGraphNode> children = new HashSet<>();
         private final Set<DirectedGraphNode> parents = new HashSet<>();
+        private final int x;
+        private final int y;
+        
+        public DirectedGraphNode() {
+            this(0, 0);
+        }
+        
+        public DirectedGraphNode(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+        
+        public int getX() {
+            return x;
+        }
+        
+        public int getY() {
+            return y;
+        }
         
         public void addChild(DirectedGraphNode child) {
             children.add(child);
@@ -430,6 +604,32 @@ public final class Demo {
         
         public Set<DirectedGraphNode> getParents() {
             return Collections.<DirectedGraphNode>unmodifiableSet(parents);
+        }
+        
+        @Override
+        public int hashCode() {
+            return x ^ y;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final DirectedGraphNode other = (DirectedGraphNode) obj;
+            if (this.x != other.x) {
+                return false;
+            }
+            if (this.y != other.y) {
+                return false;
+            }
+            return true;
         }
     }
     
@@ -451,22 +651,72 @@ public final class Demo {
         }
     }
     
-    private static List<DirectedGraphNode> getRandomDigraph(int nodes, 
+    public static final class GeneralDirectedGraphNodeForwardExpander 
+            implements NodeExpander<GeneralDirectedGraphNode> {
+
+        @Override
+        public Collection<GeneralDirectedGraphNode> 
+        expand(GeneralDirectedGraphNode node) {
+            return node.getChildren();
+        }
+    }
+    
+    public static final class GeneralDirectedGraphNodeBackwardExpander 
+            implements NodeExpander<GeneralDirectedGraphNode> {
+
+        @Override
+        public Collection<GeneralDirectedGraphNode> 
+        expand(GeneralDirectedGraphNode node) {
+            return node.getParents();
+        }
+    }
+    
+    private static List<GeneralDirectedGraphNode> getRandomDigraph(int nodes, 
                                                             int arcs,
                                                             Random random) {
-        List<DirectedGraphNode> nodeList = new ArrayList<>(nodes);
+        List<GeneralDirectedGraphNode> nodeList = new ArrayList<>(nodes);
         
         IntStream.range(0, nodes)
                  .forEach(i -> {
-                     nodeList.add(new DirectedGraphNode()); 
+                     nodeList.add(new GeneralDirectedGraphNode()); 
                  });
         
-        while (arcs-- > 0) {
-            DirectedGraphNode tail = choose(nodeList, random);
-            DirectedGraphNode head = choose(nodeList, random);
-            tail.addChild(head);
+        System.out.println("Nodes are ready.");
+        return getSparseRandomDigraph(nodeList, random);
+        
+//        while (arcs-- > 0) {
+//            GeneralDirectedGraphNode tail = choose(nodeList, random);
+//            GeneralDirectedGraphNode head = choose(nodeList, random);
+//            tail.addChild(head);
+//        }
+//        
+//        return nodeList;
+    }
+    
+    private static List<GeneralDirectedGraphNode> 
+        getSparseRandomDigraph(List<GeneralDirectedGraphNode> nodeList,
+                               Random random) {
+        int edges = (int)(nodeList.size() * 7);
+        
+        while (edges > 0) {
+            GeneralDirectedGraphNode sourceNode = choose(nodeList, random);
+            GeneralDirectedGraphNode targetNode = choose(nodeList, random);
+            sourceNode.addChild(targetNode);
+            targetNode.addChild(sourceNode);
+            edges--;
+            
+            if (edges % 100_000 == 0) {
+                System.out.println(edges);
+            }
         }
         
+        int actualEdges = 0;
+        
+        for (GeneralDirectedGraphNode node : nodeList) {
+            actualEdges += node.getChildren().size();
+        }
+        
+        System.out.println("Actual edge count: " + actualEdges);
         return nodeList;
     }
     

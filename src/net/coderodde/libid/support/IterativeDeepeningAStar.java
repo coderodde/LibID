@@ -6,7 +6,7 @@ import java.util.List;
 import net.coderodde.libid.IntHeuristicFunction;
 import net.coderodde.libid.NodeExpander;
 
-public final class IterativeDeepeningAStar<N, D> {
+public final class IterativeDeepeningAStar<N> {
 
     private static final int RUNNING = 0;
     private static final int FOUND = 1;
@@ -39,7 +39,7 @@ public final class IterativeDeepeningAStar<N, D> {
                           N target, 
                           NodeExpander<N> expander, 
                           IntHeuristicFunction<N> heuristicFunction) {
-        IterativeDeepeningAStar<N, D> state = 
+        IterativeDeepeningAStar<N> state = 
                 new IterativeDeepeningAStar<>(target,
                                               heuristicFunction, 
                                               expander);

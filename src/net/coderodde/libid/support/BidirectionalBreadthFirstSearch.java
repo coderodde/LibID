@@ -96,7 +96,7 @@ public class BidirectionalBreadthFirstSearch<N> {
         }
         
         Collections.reverse(path);
-        u = parentsBackward.get(u);
+        u = parentsBackward.get(touchNode);
         
         while (u != null) {
             path.add(u);

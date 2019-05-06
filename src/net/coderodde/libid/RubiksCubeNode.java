@@ -45,7 +45,7 @@ public final class RubiksCubeNode {
     public RubiksCubeNode() {
         data = new int[3][3][3];
         
-        for (int x = 0, value = 0; x < 2; x++) {
+        for (int x = 0, value = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
                 for (int z = 0; z < 3; z++) {
                     data[x][y][z] = value++;
@@ -119,17 +119,39 @@ public final class RubiksCubeNode {
             return true;
         }
         
-        if (o.getClass().equals(this.getClass())) {
+        if (!o.getClass().equals(this.getClass())) {
             return false;
         }
         
         RubiksCubeNode other = (RubiksCubeNode) o;
-        return Arrays.deepEquals(data, other.data);
+        
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                for (int z = 0; z < 3; z++) {
+                    if (data[x][y][z] != other.data[x][y][z]) {
+                        return false;
+                    }
+                }
+            }
+        }
+        
+        return true;
     }
     
     @Override
     public int hashCode() {
-        return Arrays.deepHashCode(data);
+        int i = 1;
+        int hash = 0;
+        
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
+                for (int z = 0; z < 3; z++) {
+                    hash += data[x][y][z] * i++;
+                }
+            }
+        }
+        
+        return hash;
     }
     
     private static void rotateAroundXAxis(RubiksCubeNode node,

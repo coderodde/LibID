@@ -2,6 +2,7 @@
 package net.coderodde.libid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -22,11 +23,12 @@ import net.coderodde.libid.support.ManhattanHeuristicFunction;
 public final class Demo {
 
     public static void main(String[] args) {
-        runGridBenchmark();
-        System.out.println();
+//        runGridBenchmark();
+//        System.out.println();
+        runRubiksCubeDemo();
 //        run15PuzzleGraphBenchmark();
 //        System.out.println();
-        runGeneralGraphBenchmark();
+//        runGeneralGraphBenchmark();
     }
     
     private static final int MOVES = 45;
@@ -75,8 +77,6 @@ public final class Demo {
         System.out.println(
                 "BIDS in " + (endTime - startTime) + " milliseconds. " +
                 "Path length: " + path2.size());
-        
-        
     }
     
     private static DirectedGraphNode[][] getGrid(int width, int height) {
@@ -722,5 +722,97 @@ public final class Demo {
     
     private static <T> T choose(List<T> list, Random random) {
         return list.get(random.nextInt(list.size()));
+    }
+    
+    private static void runRubiksCubeDemo() {
+        final int rotations = 6;
+        final long seed = System.currentTimeMillis();
+        Random random = new Random(seed);
+        RubiksCubeNode targetRubiksCubeNode = new RubiksCubeNode();
+        RubiksCubeNode sourceRubiksCubeNode = scramble(targetRubiksCubeNode,
+                                                       random,
+                                                       rotations);
+        
+        class RubiksCubeNodeExpander implements NodeExpander<RubiksCubeNode> {
+
+            @Override
+            public Collection<RubiksCubeNode> expand(RubiksCubeNode node) {
+                return node.computeNeighbors();
+            }
+        };
+        
+        NodeExpander<RubiksCubeNode> expander = 
+                new RubiksCubeNodeExpander();
+     
+        //// Bidirectional BFS:
+        long startTime = System.currentTimeMillis();
+        
+        List<RubiksCubeNode> path1 = 
+                new BidirectionalBreadthFirstSearch<RubiksCubeNode>()
+                .search(sourceRubiksCubeNode, 
+                        targetRubiksCubeNode, 
+                        expander, 
+                        expander);
+        
+        long endTime = System.currentTimeMillis();
+        
+        System.out.println("Bidirectional BFS path (" + (endTime - startTime) + 
+                           " ms):");
+        printlnPath(path1, "          ");
+        
+        //// IDDFS
+        startTime = System.currentTimeMillis();
+        
+        List<RubiksCubeNode> path2 = 
+                new BidirectionalIterativeDeepeningDepthFirstSearch
+                        <RubiksCubeNode>()
+                .search(sourceRubiksCubeNode, 
+                        targetRubiksCubeNode,
+                        expander,
+                        expander);
+        
+        endTime = System.currentTimeMillis();
+        
+        System.out.println("BIDDFS path (" + (endTime - startTime) + " ms):");
+        printlnPath(path2, "          ");
+        
+        System.out.println("Algorithms returns correct paths: " + 
+                           (path1.size() == path2.size()));
+    }
+    
+    private static RubiksCubeNode scramble(RubiksCubeNode node,
+                                           Random random,
+                                           int rotations) {
+        RubiksCubeNode.Axis[] axes = RubiksCubeNode.Axis.values();
+        RubiksCubeNode.Direction[] directions = 
+                RubiksCubeNode.Direction.values();
+        RubiksCubeNode.Layer[] layers = RubiksCubeNode.Layer.values();
+        
+        for (int r = 0; r < rotations; r++) {
+            RubiksCubeNode.Axis axis = axes[random.nextInt(axes.length)];
+            RubiksCubeNode.Direction direction = 
+                    directions[random.nextInt(directions.length)];
+            RubiksCubeNode.Layer layer = layers[random.nextInt(layers.length)];
+            node = node.rotate(axis, layer, direction);
+        }
+        
+        return node;
+    }
+    
+    private static <E> void printlnPath(List<E> list, String title) {
+        System.out.print(title);
+        System.out.println(list.get(0));
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 0; i < title.length(); i++) {
+            sb.append(' ');
+        }
+        
+        String intro = sb.toString();
+        
+        for (int i = 1; i < list.size(); i++) {
+            System.out.print(intro);
+            System.out.println(list.get(i));
+        }
     }
 }

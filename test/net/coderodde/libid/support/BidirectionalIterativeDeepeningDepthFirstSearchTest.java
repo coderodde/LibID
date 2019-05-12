@@ -2,6 +2,8 @@ package net.coderodde.libid.support;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import net.coderodde.libid.Demo.GeneralDirectedGraphNode;
@@ -38,7 +40,6 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                         new GeneralDirectedGraphNodeBackwardExpander());
         
         assertEquals(4, path.size());
-        System.out.println("e");
     }
     
     @Test
@@ -70,7 +71,6 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                                 new GeneralDirectedGraphNodeBackwardExpander());
         
         assertEquals(4, path.size());
-        System.out.println("d");
     }
     
     @Test
@@ -91,7 +91,6 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                                 new GeneralDirectedGraphNodeBackwardExpander());
         
         assertEquals(3, path.size());
-        System.out.println("c");
     }
     
     @Test
@@ -104,13 +103,15 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         a1.addChild(a2);
         b1.addChild(b2);
         
+        List<GeneralDirectedGraphNode> path = 
         new BidirectionalIterativeDeepeningDepthFirstSearch
                 <GeneralDirectedGraphNode>()
                 .search(a1, 
                         b1, 
                         new GeneralDirectedGraphNodeForwardExpander(), 
                         new GeneralDirectedGraphNodeBackwardExpander());
-        System.out.println("b");
+        
+        assertNull(path);
     }
     
     @Test
@@ -134,12 +135,10 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                         new GeneralDirectedGraphNodeBackwardExpander());
         
         assumeTrue(Arrays.asList(a, b, d).equals(path));
-        System.out.println("a");
     }
     
-//    @Test
+    @Test
     public void testOmitStuck() {
-        System.out.println("---");
         GeneralDirectedGraphNode a = new GeneralDirectedGraphNode();
         GeneralDirectedGraphNode b = new GeneralDirectedGraphNode();
         GeneralDirectedGraphNode c = new GeneralDirectedGraphNode();
@@ -162,12 +161,30 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                         new GeneralDirectedGraphNodeForwardExpander(),
                         new GeneralDirectedGraphNodeBackwardExpander());
         
-        assumeTrue(path.isEmpty());
-        System.out.println("ffsd");
+        assertEquals(4, path.size());
     }
     
     @Test
-    public void shortcutTest() {
+    public void testShortPath() {
+        GeneralDirectedGraphNode source = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode target = new GeneralDirectedGraphNode();
+        source.addChild(target);
         
+        Logger logger = Logger.getLogger(this.getClass().getSimpleName());
+        logger.log(Level.ALL, "Before computing the path.");
+        
+        List<GeneralDirectedGraphNode> path = 
+                new BidirectionalIterativeDeepeningDepthFirstSearch<
+                        GeneralDirectedGraphNode>()
+                .search(source,
+                        target,
+                        new GeneralDirectedGraphNodeForwardExpander(),
+                        new GeneralDirectedGraphNodeBackwardExpander());
+        
+        logger.log(Level.ALL, "After computing the path.");
+        
+        assertEquals(2, path.size());
+        assertEquals(source, path.get(0));
+        assertEquals(target, path.get(1));
     }
 }

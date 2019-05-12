@@ -11,7 +11,7 @@ import org.junit.Test;
  * @version 1.6 (May 6, 2019)
  */
 public class RubiksCubeNodeTest extends TestCase {
-    
+
     @Test
     public void testRotation1() {
         RubiksCubeNode node = new RubiksCubeNode();

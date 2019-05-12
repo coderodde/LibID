@@ -725,13 +725,17 @@ public final class Demo {
     }
     
     private static void runRubiksCubeDemo() {
-        final int rotations = 6;
-        final long seed = System.currentTimeMillis();
+        final int rotations = 9;
+        final long seed = 1557660223703L; //System.currentTimeMillis();
         Random random = new Random(seed);
         RubiksCubeNode targetRubiksCubeNode = new RubiksCubeNode();
         RubiksCubeNode sourceRubiksCubeNode = scramble(targetRubiksCubeNode,
                                                        random,
                                                        rotations);
+        
+        System.out.println("Seed = " + seed);
+        System.out.println("Source node: " + sourceRubiksCubeNode);
+        System.out.println("Target node: " + targetRubiksCubeNode);
         
         class RubiksCubeNodeExpander implements NodeExpander<RubiksCubeNode> {
 
@@ -743,27 +747,11 @@ public final class Demo {
         
         NodeExpander<RubiksCubeNode> expander = 
                 new RubiksCubeNodeExpander();
-     
-        //// Bidirectional BFS:
+        
+        //// BIDDFS
         long startTime = System.currentTimeMillis();
         
         List<RubiksCubeNode> path1 = 
-                new BidirectionalBreadthFirstSearch<RubiksCubeNode>()
-                .search(sourceRubiksCubeNode, 
-                        targetRubiksCubeNode, 
-                        expander, 
-                        expander);
-        
-        long endTime = System.currentTimeMillis();
-        
-        System.out.println("Bidirectional BFS path (" + (endTime - startTime) + 
-                           " ms):");
-        printlnPath(path1, "          ");
-        
-        //// IDDFS
-        startTime = System.currentTimeMillis();
-        
-        List<RubiksCubeNode> path2 = 
                 new BidirectionalIterativeDeepeningDepthFirstSearch
                         <RubiksCubeNode>()
                 .search(sourceRubiksCubeNode, 
@@ -771,11 +759,48 @@ public final class Demo {
                         expander,
                         expander);
         
-        endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
         
         System.out.println("BIDDFS path (" + (endTime - startTime) + " ms):");
-        printlnPath(path2, "          ");
+        printlnPath(path1, "          ");
+     
+        //// Bidirectional BFS:
+        startTime = System.currentTimeMillis();
         
+        List<RubiksCubeNode> path2 = 
+                new BidirectionalBreadthFirstSearch<RubiksCubeNode>()
+                .search(sourceRubiksCubeNode, 
+                        targetRubiksCubeNode, 
+                        expander, 
+                        expander);
+        
+        endTime = System.currentTimeMillis();
+        
+        System.out.println("Bidirectional BFS path (" + (endTime - startTime) + 
+                           " ms):");
+        
+        printlnPath(path2, "          ");
+     
+        //// IDDFS
+//        startTime = System.currentTimeMillis();
+//        
+//        List<RubiksCubeNode> path3 = 
+//                new IterativeDeepeningDepthFirstSearch<RubiksCubeNode>()
+//                .search(sourceRubiksCubeNode, 
+//                        targetRubiksCubeNode, 
+//                        expander);
+//        
+//        endTime = System.currentTimeMillis();
+//        
+//        System.out.println("IDDFS path (" + (endTime - startTime) + 
+//                           " ms):");
+//        
+//        printlnPath(path3, "          ");
+//        
+//        System.out.println("Algorithms returns correct paths: " + 
+//                           (path1.size() == path2.size() &&
+//                            path2.size() == path3.size()));
+//        
         System.out.println("Algorithms returns correct paths: " + 
                            (path1.size() == path2.size()));
     }

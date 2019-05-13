@@ -1,4 +1,4 @@
-package net.coderodde.libid.support;
+package net.coderodde.libid.impl;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

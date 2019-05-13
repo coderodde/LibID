@@ -1,4 +1,4 @@
-package net.coderodde.libid.support;
+package net.coderodde.libid.impl;
 
 import net.coderodde.libid.Demo.DirectedGraphNode;
 import net.coderodde.libid.IntHeuristicFunction;

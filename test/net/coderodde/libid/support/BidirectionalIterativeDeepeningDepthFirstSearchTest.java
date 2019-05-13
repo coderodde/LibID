@@ -1,5 +1,7 @@
 package net.coderodde.libid.support;
 
+import net.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
+import net.coderodde.libid.impl.BidirectionalDepthFirstIterativeDeepeningSearch;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,7 +34,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         c2.addChild(d);
         
         List<GeneralDirectedGraphNode> path;
-        path = new BidirectionalIterativeDeepeningDepthFirstSearch
+        path = new BidirectionalDepthFirstIterativeDeepeningSearch
                 <GeneralDirectedGraphNode>()
                 .search(a,
                         d,
@@ -63,7 +65,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         c3.addChild(d);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalDepthFirstIterativeDeepeningSearch
                         <GeneralDirectedGraphNode>()
                         .search(a,
                                 d, 
@@ -83,7 +85,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         b.addChild(c);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalDepthFirstIterativeDeepeningSearch
                         <GeneralDirectedGraphNode>()
                         .search(a,
                                 c, 
@@ -104,7 +106,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         b1.addChild(b2);
         
         List<GeneralDirectedGraphNode> path = 
-        new BidirectionalIterativeDeepeningDepthFirstSearch
+        new BidirectionalDepthFirstIterativeDeepeningSearch
                 <GeneralDirectedGraphNode>()
                 .search(a1, 
                         b1, 
@@ -126,7 +128,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         c.addChild(d);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalDepthFirstIterativeDeepeningSearch
                         <GeneralDirectedGraphNode>()
                 .search(
                         a, 
@@ -153,7 +155,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         b.addChild(a);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalDepthFirstIterativeDeepeningSearch
                         <GeneralDirectedGraphNode>()
                 .search(
                         a, 
@@ -174,7 +176,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         logger.log(Level.ALL, "Before computing the path.");
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch<
+                new BidirectionalDepthFirstIterativeDeepeningSearch<
                         GeneralDirectedGraphNode>()
                 .search(source,
                         target,
@@ -186,5 +188,21 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
         assertEquals(2, path.size());
         assertEquals(source, path.get(0));
         assertEquals(target, path.get(1));
+    }
+    
+    @Test
+    public void testWhenTerminalNodesAreNeighbors() {
+        GeneralDirectedGraphNode source = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode target = new GeneralDirectedGraphNode();
+        
+        source.addChild(target);
+        target.addChild(target);
+        source.addChild(source);
+        
+        new BidirectionalBreadthFirstSearch<GeneralDirectedGraphNode>()
+                .search(source, 
+                        target, 
+                        new GeneralDirectedGraphNodeForwardExpander(), 
+                        new GeneralDirectedGraphNodeForwardExpander());
     }
 }

@@ -1,5 +1,6 @@
 package net.coderodde.libid;
 
+import java.util.Collection;
 import junit.framework.TestCase;
 import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
@@ -32,5 +33,23 @@ public class RubiksCubeNodeTest extends TestCase {
         assertNotEquals(third, node);
         assertNotEquals(third, another);
         assertNotEquals(node.hashCode(), third.hashCode());
+    }
+    
+    @Test
+    public void testNeighbors() {
+        RubiksCubeNode source = new RubiksCubeNode();
+        Collection<RubiksCubeNode> neighbors = source.computeNeighbors();
+        
+        for (RubiksCubeNode.Axis axis : RubiksCubeNode.Axis.values()) {
+            for (RubiksCubeNode.Direction direction 
+                    : RubiksCubeNode.Direction.values()) {
+                for (RubiksCubeNode.Layer layer 
+                        : RubiksCubeNode.Layer.values()) {
+                    RubiksCubeNode node = new RubiksCubeNode();
+                    node = node.rotate(axis, layer, direction);
+                    assertTrue(neighbors.contains(node));
+                }
+            }
+        }
     }
 }

@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.IntStream;
-import net.coderodde.libid.support.BidirectionalIterativeDeepeningDepthFirstSearch;
-import net.coderodde.libid.support.BreadthFirstSearch;
-import net.coderodde.libid.support.IterativeDeepeningDepthFirstSearch;
+import net.coderodde.libid.impl.BidirectionalDepthFirstIterativeDeepeningSearch;
+import net.coderodde.libid.impl.BreadthFirstSearch;
+import net.coderodde.libid.impl.IterativeDeepeningDepthFirstSearch;
 import net.coderodde.libid.Demo.DirectedGraphNodeForwardExpander;
 import net.coderodde.libid.Demo.DirectedGraphNodeBackwardExpander;
-import net.coderodde.libid.support.BidirectionalBreadthFirstSearch;
-import net.coderodde.libid.support.GridHeuristicFunction;
-import net.coderodde.libid.support.IterativeDeepeningAStar;
-import net.coderodde.libid.support.ManhattanHeuristicFunction;
+import net.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
+import net.coderodde.libid.impl.GridHeuristicFunction;
+import net.coderodde.libid.impl.IterativeDeepeningAStar;
+import net.coderodde.libid.impl.ManhattanHeuristicFunction;
 
 public final class Demo {
 
@@ -28,7 +28,6 @@ public final class Demo {
         runRubiksCubeDemo();
 //        run15PuzzleGraphBenchmark();
 //        System.out.println();
-//        runGeneralGraphBenchmark();
     }
     
     private static final int MOVES = 45;
@@ -65,7 +64,7 @@ public final class Demo {
         startTime = System.currentTimeMillis();
         
         List<DirectedGraphNode> path2 = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalDepthFirstIterativeDeepeningSearch
                         <DirectedGraphNode>()
                 .search(sourceNode,
                         targetNode, 
@@ -137,7 +136,7 @@ public final class Demo {
         
         IterativeDeepeningDepthFirstSearch<SlidingTilePuzzleNode> finder2;
         
-        BidirectionalIterativeDeepeningDepthFirstSearch
+        BidirectionalDepthFirstIterativeDeepeningSearch
                 <SlidingTilePuzzleNode> finder3;
        
         IterativeDeepeningAStar<SlidingTilePuzzleNode> finder4;
@@ -147,7 +146,7 @@ public final class Demo {
         // Construct finders:
         finder1 = new BreadthFirstSearch<>();
         finder2 = new IterativeDeepeningDepthFirstSearch<>();
-        finder3 = new BidirectionalIterativeDeepeningDepthFirstSearch<>();
+        finder3 = new BidirectionalDepthFirstIterativeDeepeningSearch<>();
         finder4 = new IterativeDeepeningAStar<>();
         finder5 = new BidirectionalBreadthFirstSearch<>();
         
@@ -245,7 +244,7 @@ public final class Demo {
             new IterativeDeepeningDepthFirstSearch<SlidingTilePuzzleNode>()
                     .search(source, target, expander);
             
-            new BidirectionalIterativeDeepeningDepthFirstSearch
+            new BidirectionalDepthFirstIterativeDeepeningSearch
                     <SlidingTilePuzzleNode>()
                     .search(source, target, expander, expander);
         }
@@ -253,8 +252,7 @@ public final class Demo {
     
     private static void runGeneralGraphBenchmark() {
         System.out.println("*** General graph benchmark ***");
-        long seed = 1544622684594L; //System.currentTimeMillis();
-//        long seed = System.currentTimeMillis();
+        long seed = System.currentTimeMillis();
         Random random = new Random(seed);
         List<GeneralDirectedGraphNode> nodeList = 
                 getRandomDigraph(BENCHMARK_NODES,
@@ -270,17 +268,17 @@ public final class Demo {
         }
     }
     
-    private static final int BENCHMARK_NODES = 100_000;
-    private static final int BENCHMARK_ARCS = 1_000_000;
+    private static final int BENCHMARK_NODES = 300_000;
+    private static final int BENCHMARK_ARCS = 1_900_000;
     private static final int WARMUP_ITERATIONS = 10;
     
     private static void warmupGeneralGraphBenchmark(
             List<GeneralDirectedGraphNode> nodeList, Random random) {
         System.out.println("Warming up...");
         
-        BidirectionalIterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode>
+        BidirectionalDepthFirstIterativeDeepeningSearch<GeneralDirectedGraphNode>
                 finder1 = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch<>();
+                new BidirectionalDepthFirstIterativeDeepeningSearch<>();
         
         IterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode> finder2 = 
                 new IterativeDeepeningDepthFirstSearch<>();
@@ -371,9 +369,9 @@ public final class Demo {
         GeneralDirectedGraphNode source = choose(nodeList, random);
         GeneralDirectedGraphNode target = choose(nodeList, random);
         
-        BidirectionalIterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode>
+        BidirectionalDepthFirstIterativeDeepeningSearch<GeneralDirectedGraphNode>
                 finder1 = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch<>();
+                new BidirectionalDepthFirstIterativeDeepeningSearch<>();
         
         IterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode> finder2 = 
                 new IterativeDeepeningDepthFirstSearch<>();
@@ -725,8 +723,8 @@ public final class Demo {
     }
     
     private static void runRubiksCubeDemo() {
-        final int rotations = 9;
-        final long seed = 1557660223703L; //System.currentTimeMillis();
+        final int rotations = 0;
+        final long seed = 1557734106878L; System.currentTimeMillis();
         Random random = new Random(seed);
         RubiksCubeNode targetRubiksCubeNode = new RubiksCubeNode();
         RubiksCubeNode sourceRubiksCubeNode = scramble(targetRubiksCubeNode,
@@ -752,7 +750,7 @@ public final class Demo {
         long startTime = System.currentTimeMillis();
         
         List<RubiksCubeNode> path1 = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalDepthFirstIterativeDeepeningSearch
                         <RubiksCubeNode>()
                 .search(sourceRubiksCubeNode, 
                         targetRubiksCubeNode,
@@ -761,7 +759,7 @@ public final class Demo {
         
         long endTime = System.currentTimeMillis();
         
-        System.out.println("BIDDFS path (" + (endTime - startTime) + " ms):");
+        System.out.println("BDFID path (" + (endTime - startTime) + " ms):");
         printlnPath(path1, "          ");
      
         //// Bidirectional BFS:

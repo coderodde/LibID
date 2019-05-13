@@ -1,4 +1,4 @@
-package net.coderodde.libid.support;
+package net.coderodde.libid.impl;
 
 import net.coderodde.libid.SlidingTilePuzzleNode;
 import net.coderodde.libid.IntHeuristicFunction;

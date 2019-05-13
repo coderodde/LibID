@@ -1,6 +1,5 @@
 package net.coderodde.libid;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,10 +40,10 @@ public final class RubiksCubeNode {
     private final int[][][] data;
 
     private Set<RubiksCubeNode> neighbors;
-
+    
     public RubiksCubeNode() {
         data = new int[3][3][3];
-
+        
         for (int x = 0, value = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
                 for (int z = 0; z < 3; z++) {
@@ -124,7 +123,7 @@ public final class RubiksCubeNode {
         }
 
         RubiksCubeNode other = (RubiksCubeNode) o;
-
+        
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
                 for (int z = 0; z < 3; z++) {
@@ -140,18 +139,17 @@ public final class RubiksCubeNode {
 
     @Override
     public int hashCode() {
-        int i = 1;
-        int hash = 0;
-
-        for (int x = 0; x < 3; x++) {
+        int hashCode = 0;
+        
+        for (int x = 0, i = 1; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
-                for (int z = 0; z < 3; z++) {
-                    hash += data[x][y][z] * i++;
+                for (int z = 0; z < 3; z++, i++) {
+                    hashCode += i * data[x][y][z];
                 }
             }
         }
-
-        return hash;
+        
+        return hashCode;
     }
 
     private static void rotateAroundXAxis(RubiksCubeNode node,
@@ -226,7 +224,7 @@ public final class RubiksCubeNode {
         data[xLayer][2][1] = data[xLayer][1][2];
 
         data[xLayer][2][2] = data[xLayer][0][2];
-        data[xLayer][1][2] = data[xLayer][2][1];
+        data[xLayer][1][2] = data[xLayer][0][1];
         data[xLayer][0][2] = saveValue1;
         data[xLayer][0][1] = saveValue2;
     }

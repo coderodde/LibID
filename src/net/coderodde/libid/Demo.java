@@ -2,7 +2,6 @@
 package net.coderodde.libid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,14 +22,14 @@ import net.coderodde.libid.impl.ManhattanHeuristicFunction;
 public final class Demo {
 
     public static void main(String[] args) {
-//        runGridBenchmark();
-//        System.out.println();
+        runGridBenchmark();
+        System.out.println();
         runRubiksCubeDemo();
-//        run15PuzzleGraphBenchmark();
-//        System.out.println();
+        run15PuzzleGraphBenchmark();
+        System.out.println();
     }
     
-    private static final int MOVES = 45;
+    private static final int MOVES = 50;
     
     private static void runGridBenchmark() {
         final int width = 20;
@@ -74,7 +73,7 @@ public final class Demo {
         endTime = System.currentTimeMillis();
         
         System.out.println(
-                "BIDS in " + (endTime - startTime) + " milliseconds. " +
+                "BIDDFS in " + (endTime - startTime) + " milliseconds. " +
                 "Path length: " + path2.size());
     }
     
@@ -554,16 +553,23 @@ public final class Demo {
         private final Set<GeneralDirectedGraphNode> parents  = new HashSet<>();
         
         public Set<GeneralDirectedGraphNode> getChildren() {
-            return Collections.<GeneralDirectedGraphNode>unmodifiableSet(children);
+            return Collections.<GeneralDirectedGraphNode>
+                    unmodifiableSet(children);
         }
         
         public Set<GeneralDirectedGraphNode> getParents() {
-            return Collections.<GeneralDirectedGraphNode>unmodifiableSet(parents);
+            return Collections.<GeneralDirectedGraphNode>
+                    unmodifiableSet(parents);
         }
         
         public void addChild(GeneralDirectedGraphNode other) {
             children.add(other);
             other.parents.add(this);
+        }
+        
+        @Override
+        public String toString() {
+            return "[GDGN: id = " + super.toString() + "]";
         }
     }
         
@@ -723,8 +729,8 @@ public final class Demo {
     }
     
     private static void runRubiksCubeDemo() {
-        final int rotations = 0;
-        final long seed = 1557734106878L; System.currentTimeMillis();
+        final int rotations = 5;
+        final long seed = System.currentTimeMillis();
         Random random = new Random(seed);
         RubiksCubeNode targetRubiksCubeNode = new RubiksCubeNode();
         RubiksCubeNode sourceRubiksCubeNode = scramble(targetRubiksCubeNode,
@@ -762,10 +768,22 @@ public final class Demo {
         System.out.println("BDFID path (" + (endTime - startTime) + " ms):");
         printlnPath(path1, "          ");
      
-        //// Bidirectional BFS:
+        //// IDDFS
         startTime = System.currentTimeMillis();
         
         List<RubiksCubeNode> path2 = 
+                new IterativeDeepeningDepthFirstSearch<RubiksCubeNode>()
+                        .search(sourceRubiksCubeNode, targetRubiksCubeNode, expander);
+        
+        endTime = System.currentTimeMillis();
+        
+        System.out.println("IDDFS path (" + (endTime - startTime) + " ms):");
+        printlnPath(path2, "          ");
+        
+        //// Bidirectional BFS:
+        startTime = System.currentTimeMillis();
+        
+        List<RubiksCubeNode> path3 = 
                 new BidirectionalBreadthFirstSearch<RubiksCubeNode>()
                 .search(sourceRubiksCubeNode, 
                         targetRubiksCubeNode, 

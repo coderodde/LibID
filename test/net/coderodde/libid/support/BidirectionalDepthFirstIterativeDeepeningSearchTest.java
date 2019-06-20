@@ -13,7 +13,7 @@ import net.coderodde.libid.Demo.GeneralDirectedGraphNodeBackwardExpander;
 import net.coderodde.libid.Demo.GeneralDirectedGraphNodeForwardExpander;
 import static org.junit.Assume.assumeTrue;
 
-public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
+public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
 
     @Test
     public void testSearchSmall() {
@@ -97,6 +97,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
     
     @Test
     public void testSearchOnDisconnected() {
+        System.out.println("disco!");
         GeneralDirectedGraphNode a1 = new GeneralDirectedGraphNode();
         GeneralDirectedGraphNode a2 = new GeneralDirectedGraphNode();
         GeneralDirectedGraphNode b1 = new GeneralDirectedGraphNode();
@@ -114,6 +115,7 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                         new GeneralDirectedGraphNodeBackwardExpander());
         
         assertNull(path);
+        System.out.println("yeah!");
     }
     
     @Test
@@ -204,5 +206,25 @@ public class BidirectionalIterativeDeepeningDepthFirstSearchTest {
                         target, 
                         new GeneralDirectedGraphNodeForwardExpander(), 
                         new GeneralDirectedGraphNodeForwardExpander());
+    }
+    
+    @Test
+    public void testFrontiersDoNotAgreeOnMeetingNode() {
+        GeneralDirectedGraphNode s = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode t = new GeneralDirectedGraphNode();
+        
+        s.addChild(a);
+        a.addChild(b);
+        b.addChild(t);
+        
+        List<GeneralDirectedGraphNode> path = 
+        new BidirectionalDepthFirstIterativeDeepeningSearch
+                <GeneralDirectedGraphNode>()
+                .search(s, 
+                        t, 
+                        new GeneralDirectedGraphNodeForwardExpander(),
+                        new GeneralDirectedGraphNodeBackwardExpander());
     }
 }

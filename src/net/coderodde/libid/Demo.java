@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.IntStream;
-import net.coderodde.libid.impl.BidirectionalDepthFirstIterativeDeepeningSearch;
+import net.coderodde.libid.impl.BidirectionalIterativeDeepeningDepthFirstSearch;
 import net.coderodde.libid.impl.BreadthFirstSearch;
 import net.coderodde.libid.impl.IterativeDeepeningDepthFirstSearch;
 import net.coderodde.libid.Demo.DirectedGraphNodeForwardExpander;
@@ -63,7 +63,7 @@ public final class Demo {
         startTime = System.currentTimeMillis();
         
         List<DirectedGraphNode> path2 = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch
+                new BidirectionalIterativeDeepeningDepthFirstSearch
                         <DirectedGraphNode>()
                 .search(sourceNode,
                         targetNode, 
@@ -135,7 +135,7 @@ public final class Demo {
         
         IterativeDeepeningDepthFirstSearch<SlidingTilePuzzleNode> finder2;
         
-        BidirectionalDepthFirstIterativeDeepeningSearch
+        BidirectionalIterativeDeepeningDepthFirstSearch
                 <SlidingTilePuzzleNode> finder3;
        
         IterativeDeepeningAStar<SlidingTilePuzzleNode> finder4;
@@ -145,7 +145,7 @@ public final class Demo {
         // Construct finders:
         finder1 = new BreadthFirstSearch<>();
         finder2 = new IterativeDeepeningDepthFirstSearch<>();
-        finder3 = new BidirectionalDepthFirstIterativeDeepeningSearch<>();
+        finder3 = new BidirectionalIterativeDeepeningDepthFirstSearch<>();
         finder4 = new IterativeDeepeningAStar<>();
         finder5 = new BidirectionalBreadthFirstSearch<>();
         
@@ -243,7 +243,7 @@ public final class Demo {
             new IterativeDeepeningDepthFirstSearch<SlidingTilePuzzleNode>()
                     .search(source, target, expander);
             
-            new BidirectionalDepthFirstIterativeDeepeningSearch
+            new BidirectionalIterativeDeepeningDepthFirstSearch
                     <SlidingTilePuzzleNode>()
                     .search(source, target, expander, expander);
         }
@@ -275,9 +275,9 @@ public final class Demo {
             List<GeneralDirectedGraphNode> nodeList, Random random) {
         System.out.println("Warming up...");
         
-        BidirectionalDepthFirstIterativeDeepeningSearch<GeneralDirectedGraphNode>
+        BidirectionalIterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode>
                 finder1 = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch<>();
+                new BidirectionalIterativeDeepeningDepthFirstSearch<>();
         
         IterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode> finder2 = 
                 new IterativeDeepeningDepthFirstSearch<>();
@@ -368,9 +368,9 @@ public final class Demo {
         GeneralDirectedGraphNode source = choose(nodeList, random);
         GeneralDirectedGraphNode target = choose(nodeList, random);
         
-        BidirectionalDepthFirstIterativeDeepeningSearch<GeneralDirectedGraphNode>
+        BidirectionalIterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode>
                 finder1 = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch<>();
+                new BidirectionalIterativeDeepeningDepthFirstSearch<>();
         
         IterativeDeepeningDepthFirstSearch<GeneralDirectedGraphNode> finder2 = 
                 new IterativeDeepeningDepthFirstSearch<>();
@@ -756,7 +756,7 @@ public final class Demo {
         long startTime = System.currentTimeMillis();
         
         List<RubiksCubeNode> path1 = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch
+                new BidirectionalIterativeDeepeningDepthFirstSearch
                         <RubiksCubeNode>()
                 .search(sourceRubiksCubeNode, 
                         targetRubiksCubeNode,

@@ -1,7 +1,7 @@
 package net.coderodde.libid.support;
 
 import net.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
-import net.coderodde.libid.impl.BidirectionalDepthFirstIterativeDeepeningSearch;
+import net.coderodde.libid.impl.BidirectionalIterativeDeepeningDepthFirstSearch;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,7 +34,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         c2.addChild(d);
         
         List<GeneralDirectedGraphNode> path;
-        path = new BidirectionalDepthFirstIterativeDeepeningSearch
+        path = new BidirectionalIterativeDeepeningDepthFirstSearch
                 <GeneralDirectedGraphNode>()
                 .search(a,
                         d,
@@ -65,7 +65,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         c3.addChild(d);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch
+                new BidirectionalIterativeDeepeningDepthFirstSearch
                         <GeneralDirectedGraphNode>()
                         .search(a,
                                 d, 
@@ -85,7 +85,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b.addChild(c);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch
+                new BidirectionalIterativeDeepeningDepthFirstSearch
                         <GeneralDirectedGraphNode>()
                         .search(a,
                                 c, 
@@ -107,7 +107,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b1.addChild(b2);
         
         List<GeneralDirectedGraphNode> path = 
-        new BidirectionalDepthFirstIterativeDeepeningSearch
+        new BidirectionalIterativeDeepeningDepthFirstSearch
                 <GeneralDirectedGraphNode>()
                 .search(a1, 
                         b1, 
@@ -130,7 +130,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         c.addChild(d);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch
+                new BidirectionalIterativeDeepeningDepthFirstSearch
                         <GeneralDirectedGraphNode>()
                 .search(
                         a, 
@@ -157,7 +157,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b.addChild(a);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch
+                new BidirectionalIterativeDeepeningDepthFirstSearch
                         <GeneralDirectedGraphNode>()
                 .search(
                         a, 
@@ -178,7 +178,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         logger.log(Level.ALL, "Before computing the path.");
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch<
+                new BidirectionalIterativeDeepeningDepthFirstSearch<
                         GeneralDirectedGraphNode>()
                 .search(source,
                         target,
@@ -220,11 +220,34 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b.addChild(t);
         
         List<GeneralDirectedGraphNode> path = 
-        new BidirectionalDepthFirstIterativeDeepeningSearch
+        new BidirectionalIterativeDeepeningDepthFirstSearch
                 <GeneralDirectedGraphNode>()
                 .search(s, 
                         t, 
                         new GeneralDirectedGraphNodeForwardExpander(),
                         new GeneralDirectedGraphNodeBackwardExpander());
+    }
+    
+    @Test
+    public void does() {
+        GeneralDirectedGraphNode s = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode t = new GeneralDirectedGraphNode();
+        
+        s.addChild(a);
+        a.addChild(b);
+        b.addChild(c);
+        c.addChild(a);
+        
+        System.out.println("Begin 1");
+        new BidirectionalIterativeDeepeningDepthFirstSearch
+                <GeneralDirectedGraphNode>()
+                .search(s,
+                        t, 
+                        new GeneralDirectedGraphNodeForwardExpander(), 
+                        new GeneralDirectedGraphNodeBackwardExpander());
+        System.out.println("End 1");
     }
 }

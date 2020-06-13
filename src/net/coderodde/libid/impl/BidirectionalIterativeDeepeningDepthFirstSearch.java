@@ -9,38 +9,31 @@ import java.util.List;
 import java.util.Set;
 import net.coderodde.libid.NodeExpander;
 
-public final class BidirectionalDepthFirstIterativeDeepeningSearch<N> {
+public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
 
     private final N source;
-    private final N target;
     private final Deque<N> backwardSearchStack;
     private final Set<N> frontier;
     private final NodeExpander<N> forwardExpander;
     private final NodeExpander<N> backwardExpander;
-    private final Set<N> previousFrontier;
 
-    public BidirectionalDepthFirstIterativeDeepeningSearch() {
+    public BidirectionalIterativeDeepeningDepthFirstSearch() {
         this.source              = null;
-        this.target              = null;
         this.backwardSearchStack = null;
         this.frontier            = null;
         this.forwardExpander     = null;
         this.backwardExpander    = null;
-        this.previousFrontier    = null;
     }
 
-    private BidirectionalDepthFirstIterativeDeepeningSearch(
+    private BidirectionalIterativeDeepeningDepthFirstSearch(
         N source,
-        N target,
         NodeExpander<N> forwardExpander,
         NodeExpander<N> backwardExpander) {
         this.source              = source;
-        this.target              = target;
         this.backwardSearchStack = new ArrayDeque<>();
         this.frontier            = new HashSet<>();
         this.forwardExpander     = forwardExpander;
         this.backwardExpander    = backwardExpander;
-        this.previousFrontier    = new HashSet<>();
     }
 
     public List<N> search(N source, 
@@ -53,10 +46,9 @@ public final class BidirectionalDepthFirstIterativeDeepeningSearch<N> {
             return new ArrayList<>(Arrays.asList(source));
         }
 
-        BidirectionalDepthFirstIterativeDeepeningSearch<N> state = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch<>(
+        BidirectionalIterativeDeepeningDepthFirstSearch<N> state = 
+                new BidirectionalIterativeDeepeningDepthFirstSearch<>(
                         source,
-                        target,
                         forwardExpander,
                         backwardExpander);
 
@@ -64,16 +56,6 @@ public final class BidirectionalDepthFirstIterativeDeepeningSearch<N> {
             // Do a depth limited search in forward direction. Put all nodes at 
             // depth == 0 to the frontier.
             state.depthLimitedSearchForward(source, depth);
-            
-            if (state.previousFrontier.equals(state.frontier)) {
-                // The forward search was not able to make any progress, so we
-                // are stuck in a strongly connected component having no paths 
-                // towards the target node.
-                return null;
-            }
-            
-            state.previousFrontier.clear();
-            state.previousFrontier.addAll(state.frontier);
             
             // Perform a reversed search starting from the target node and 
             // recurring to the depth 'depth'.
@@ -92,7 +74,7 @@ public final class BidirectionalDepthFirstIterativeDeepeningSearch<N> {
             if (meetingNode != null) {
                 return state.buildPath(meetingNode);
             }
-
+            
             state.backwardSearchStack.clear();
             // Wipe out the frontier.
             state.frontier.clear();
@@ -137,7 +119,7 @@ public final class BidirectionalDepthFirstIterativeDeepeningSearch<N> {
     private List<N> buildPath(N meetingNode) {
         List<N> path = new ArrayList<>();
         List<N> prefixPath = 
-                new BidirectionalDepthFirstIterativeDeepeningSearch<N>()
+                new BidirectionalIterativeDeepeningDepthFirstSearch<N>()
                         .search(source, 
                                 meetingNode, 
                                 forwardExpander, 

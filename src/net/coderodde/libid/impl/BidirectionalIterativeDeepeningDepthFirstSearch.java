@@ -75,7 +75,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                 return state.buildPath(meetingNode);
             }
             
-            state.backwardSearchStack.clear();
             // Wipe out the frontier.
             state.frontier.clear();
         }

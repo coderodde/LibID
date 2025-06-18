@@ -1,4 +1,5 @@
-package net.coderodde.libid;
+
+package io.github.coderodde.libid;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,15 +9,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.IntStream;
-import net.coderodde.libid.impl.BidirectionalIterativeDeepeningDepthFirstSearch;
-import net.coderodde.libid.impl.BreadthFirstSearch;
-import net.coderodde.libid.impl.IterativeDeepeningDepthFirstSearch;
-import net.coderodde.libid.Demo.DirectedGraphNodeForwardExpander;
-import net.coderodde.libid.Demo.DirectedGraphNodeBackwardExpander;
-import net.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
-import net.coderodde.libid.impl.GridHeuristicFunction;
-import net.coderodde.libid.impl.IterativeDeepeningAStar;
-import net.coderodde.libid.impl.ManhattanHeuristicFunction;
+import io.github.coderodde.libid.impl.BidirectionalIterativeDeepeningDepthFirstSearch;
+import io.github.coderodde.libid.impl.BreadthFirstSearch;
+import io.github.coderodde.libid.impl.IterativeDeepeningDepthFirstSearch;
+import io.github.coderodde.libid.Demo.DirectedGraphNodeForwardExpander;
+import io.github.coderodde.libid.Demo.DirectedGraphNodeBackwardExpander;
+import io.github.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
+import io.github.coderodde.libid.impl.GridHeuristicFunction;
+import io.github.coderodde.libid.impl.IterativeDeepeningAStar;
+import io.github.coderodde.libid.impl.ManhattanHeuristicFunction;
 
 public final class Demo {
 

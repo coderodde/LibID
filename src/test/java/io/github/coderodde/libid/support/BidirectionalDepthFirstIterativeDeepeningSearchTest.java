@@ -1,16 +1,16 @@
-package net.coderodde.libid.support;
+package io.github.coderodde.libid.support;
 
-import net.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
-import net.coderodde.libid.impl.BidirectionalIterativeDeepeningDepthFirstSearch;
+import io.github.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
+import io.github.coderodde.libid.impl.BidirectionalIterativeDeepeningDepthFirstSearch;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import net.coderodde.libid.Demo.GeneralDirectedGraphNode;
-import net.coderodde.libid.Demo.GeneralDirectedGraphNodeBackwardExpander;
-import net.coderodde.libid.Demo.GeneralDirectedGraphNodeForwardExpander;
+import io.github.coderodde.libid.Demo.GeneralDirectedGraphNode;
+import io.github.coderodde.libid.Demo.GeneralDirectedGraphNodeBackwardExpander;
+import io.github.coderodde.libid.Demo.GeneralDirectedGraphNodeForwardExpander;
 import static org.junit.Assume.assumeTrue;
 
 public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
@@ -93,6 +93,29 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
                                 new GeneralDirectedGraphNodeBackwardExpander());
         
         assertEquals(3, path.size());
+    }
+    
+    @Test
+    public void testOnCycleTargetNotReachable() {
+        System.out.println("BEGIN: testOnCycleTargetNotReachable()");
+        
+        GeneralDirectedGraphNode s  = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a1 = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a2 = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a3 = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode t  = new GeneralDirectedGraphNode();
+        
+        a1.addChild(a2);
+        a2.addChild(a3);
+        a3.addChild(a1);
+        s.addChild(a1);
+        
+        new BidirectionalIterativeDeepeningDepthFirstSearch
+                <GeneralDirectedGraphNode>()
+                .search(s,
+                        t,
+                        new GeneralDirectedGraphNodeForwardExpander(), 
+                        new GeneralDirectedGraphNodeBackwardExpander());
     }
     
     @Test

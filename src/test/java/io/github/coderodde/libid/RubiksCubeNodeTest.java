@@ -1,5 +1,6 @@
-package net.coderodde.libid;
+package io.github.coderodde.libid;
 
+import io.github.coderodde.libid.RubiksCubeNode;
 import java.util.Collection;
 import junit.framework.TestCase;
 import static org.junit.Assert.assertNotEquals;

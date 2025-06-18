@@ -14,13 +14,16 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     private final N source;
     private final Deque<N> backwardSearchStack;
     private final Set<N> frontier;
+    private final Set<N> visited;
     private final NodeExpander<N> forwardExpander;
     private final NodeExpander<N> backwardExpander;
+    private int previousVisitedSize;
 
     public BidirectionalIterativeDeepeningDepthFirstSearch() {
         this.source              = null;
         this.backwardSearchStack = null;
         this.frontier            = null;
+        this.visited             = null;
         this.forwardExpander     = null;
         this.backwardExpander    = null;
     }
@@ -32,8 +35,10 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         this.source              = source;
         this.backwardSearchStack = new ArrayDeque<>();
         this.frontier            = new HashSet<>();
+        this.visited             = new HashSet<>();
         this.forwardExpander     = forwardExpander;
         this.backwardExpander    = backwardExpander;
+        this.previousVisitedSize = 0;
     }
 
     public List<N> search(N source, 
@@ -53,6 +58,8 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                         backwardExpander);
 
         for (int depth = 0;; ++depth) {
+            state.visited.clear();
+            
             // Do a depth limited search in forward direction. Put all nodes at 
             // depth == 0 to the frontier.
             state.depthLimitedSearchForward(source, depth);
@@ -60,11 +67,17 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             // Perform a reversed search starting from the target node and 
             // recurring to the depth 'depth'.
             N meetingNode = state.depthLimitedSearchBackward(target, depth);
-
+            
             if (meetingNode != null) {
                 return state.buildPath(meetingNode);
             }
-
+            
+            if (state.visited.size() == state.previousVisitedSize) {
+                return null;
+            }
+            
+            state.previousVisitedSize = state.visited.size();
+            state.visited.clear();
             state.backwardSearchStack.clear();
 
             // Perform a reversed search once again with depth = 'depth + 1'.
@@ -81,6 +94,12 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     }
 
     private void depthLimitedSearchForward(N node, int depth) {
+        if (visited.contains(node)) {
+            return;
+        }
+        
+        visited.add(node);
+        
         if (depth == 0) {
             frontier.add(node);
             return;

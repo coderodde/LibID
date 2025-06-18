@@ -97,8 +97,6 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testOnCycleTargetNotReachable() {
-        System.out.println("BEGIN: testOnCycleTargetNotReachable()");
-        
         GeneralDirectedGraphNode s  = new GeneralDirectedGraphNode();
         GeneralDirectedGraphNode a1 = new GeneralDirectedGraphNode();
         GeneralDirectedGraphNode a2 = new GeneralDirectedGraphNode();
@@ -120,7 +118,6 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testSearchOnDisconnected() {
-        System.out.println("disco!");
         GeneralDirectedGraphNode a1 = new GeneralDirectedGraphNode();
         GeneralDirectedGraphNode a2 = new GeneralDirectedGraphNode();
         GeneralDirectedGraphNode b1 = new GeneralDirectedGraphNode();
@@ -138,7 +135,6 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
                         new GeneralDirectedGraphNodeBackwardExpander());
         
         assertNull(path);
-        System.out.println("yeah!");
     }
     
     @Test
@@ -264,13 +260,11 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b.addChild(c);
         c.addChild(a);
         
-        System.out.println("Begin 1");
         new BidirectionalIterativeDeepeningDepthFirstSearch
                 <GeneralDirectedGraphNode>()
                 .search(s,
                         t, 
                         new GeneralDirectedGraphNodeForwardExpander(), 
                         new GeneralDirectedGraphNodeBackwardExpander());
-        System.out.println("End 1");
     }
 }

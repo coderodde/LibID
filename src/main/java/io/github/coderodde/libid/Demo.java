@@ -25,6 +25,9 @@ public final class Demo {
         runGridBenchmark();
         System.out.println();
         runRubiksCubeDemo();
+        System.out.println();
+        runGeneralGraphBenchmark();
+        System.out.println();
         run15PuzzleGraphBenchmark();
         System.out.println();
     }
@@ -32,8 +35,10 @@ public final class Demo {
     private static final int MOVES = 50;
     
     private static void runGridBenchmark() {
+        System.out.println("<<< runGridBenchmark() >>>");
         final int width = 20;
         final int height = 20;
+        
         DirectedGraphNode[][] grid = getGrid(width, height);
         DirectedGraphNode sourceNode = grid[0][0];
         DirectedGraphNode targetNode = grid[height - 1][width - 1];
@@ -118,7 +123,7 @@ public final class Demo {
     }
     
     private static void run15PuzzleGraphBenchmark() {
-        System.out.println("*** 15-puzzle graph benchmark ***");
+        System.out.println("<<< run15PuzzleGraphBenchmark() >>>");
         long seed =  System.currentTimeMillis();
         Random random = new Random(seed);
         
@@ -250,7 +255,7 @@ public final class Demo {
     }
     
     private static void runGeneralGraphBenchmark() {
-        System.out.println("*** General graph benchmark ***");
+        System.out.println("<<< runGeneralGraphBenchmark() >>>");
         long seed = System.currentTimeMillis();
         Random random = new Random(seed);
         List<GeneralDirectedGraphNode> nodeList = 
@@ -260,7 +265,7 @@ public final class Demo {
         
         
         System.out.println("Seed = " + seed);
-//        warmupGeneralGraphBenchmark(nodeList, random);
+        
         for (int i = 0; i < 10; i++) {
             benchmarkGeneralGraph(nodeList, random);
             System.out.println("-----");
@@ -765,7 +770,7 @@ public final class Demo {
         
         long endTime = System.currentTimeMillis();
         
-        System.out.println("BDFID path (" + (endTime - startTime) + " ms):");
+        System.out.println("BIDDFS path (" + (endTime - startTime) + " ms):");
         printlnPath(path1, "          ");
      
         //// IDDFS

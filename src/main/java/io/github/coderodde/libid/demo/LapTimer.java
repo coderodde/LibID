@@ -1,4 +1,4 @@
-package io.github.coderodde.libid;
+package io.github.coderodde.libid.demo;
 
 public final class LapTimer {
     

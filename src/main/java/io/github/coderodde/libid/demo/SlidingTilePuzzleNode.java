@@ -1,4 +1,4 @@
-package io.github.coderodde.libid;
+package io.github.coderodde.libid.demo;
 
 import java.util.ArrayList;
 import java.util.Arrays;

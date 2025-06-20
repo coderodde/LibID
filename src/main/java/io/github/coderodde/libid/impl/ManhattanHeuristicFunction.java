@@ -1,6 +1,6 @@
 package io.github.coderodde.libid.impl;
 
-import io.github.coderodde.libid.SlidingTilePuzzleNode;
+import io.github.coderodde.libid.demo.SlidingTilePuzzleNode;
 import io.github.coderodde.libid.IntHeuristicFunction;
 
 public class ManhattanHeuristicFunction 

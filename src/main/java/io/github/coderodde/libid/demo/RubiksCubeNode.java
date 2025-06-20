@@ -1,4 +1,4 @@
-package io.github.coderodde.libid;
+package io.github.coderodde.libid.demo;
 
 import java.util.HashSet;
 import java.util.Set;

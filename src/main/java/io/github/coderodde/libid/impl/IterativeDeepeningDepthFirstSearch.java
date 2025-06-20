@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import io.github.coderodde.libid.NodeExpander;
-import io.github.coderodde.libid.SlidingTilePuzzleNode;
+import io.github.coderodde.libid.demo.SlidingTilePuzzleNode;
 
 public final class IterativeDeepeningDepthFirstSearch<N> {
 

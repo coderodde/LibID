@@ -8,9 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import io.github.coderodde.libid.Demo.GeneralDirectedGraphNode;
-import io.github.coderodde.libid.Demo.GeneralDirectedGraphNodeBackwardExpander;
-import io.github.coderodde.libid.Demo.GeneralDirectedGraphNodeForwardExpander;
+import io.github.coderodde.libid.demo.Demo.GeneralDirectedGraphNode;
+import io.github.coderodde.libid.demo.Demo.GeneralDirectedGraphNodeBackwardExpander;
+import io.github.coderodde.libid.demo.Demo.GeneralDirectedGraphNodeForwardExpander;
 import static org.junit.Assume.assumeTrue;
 
 public class BidirectionalDepthFirstIterativeDeepeningSearchTest {

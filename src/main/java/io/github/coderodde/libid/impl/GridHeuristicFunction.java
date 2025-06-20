@@ -1,6 +1,6 @@
 package io.github.coderodde.libid.impl;
 
-import io.github.coderodde.libid.Demo.DirectedGraphNode;
+import io.github.coderodde.libid.demo.Demo.DirectedGraphNode;
 import io.github.coderodde.libid.IntHeuristicFunction;
 
 /**

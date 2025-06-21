@@ -62,20 +62,12 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                         forwardExpander,
                         backwardExpander);
 
-        for (int depth = 0;; ++depth) {
+        for (int forwardDepth = 0;; ++forwardDepth) {
             state.visitedForward.clear();
             
             // Do a depth limited search in forward direction. Put all nodes at 
             // depth == 0 to the frontier.
-            state.depthLimitedSearchForward(source, depth);
-            
-            // Perform a reversed search starting from the target node and 
-            // recurring to the depth 'depth'.
-            N meetingNode = state.depthLimitedSearchBackward(target, depth);
-            
-            if (meetingNode != null) {
-                return state.buildPath(meetingNode);
-            }
+            state.depthLimitedSearchForward(source, forwardDepth);
             
             if (state.visitedForward.size() == 
                 state.previousVisitedSizeForward) {
@@ -84,25 +76,29 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             
             state.previousVisitedSizeForward = state.visitedForward.size();
             state.visitedForward.clear();
-            state.backwardSearchStack.clear();
+            
+            for (int backwardDepth = forwardDepth;
+                     backwardDepth < forwardDepth + 2;
+                     backwardDepth++) {
+                
+                N meetingNode = state.depthLimitedSearchBackward(target,
+                                                                 backwardDepth);
 
-            // Perform a reversed search once again with depth = 'depth + 1'.
-            // We need this in case the shortest path has odd number of arcs.
-            meetingNode = state.depthLimitedSearchBackward(target, depth + 1);
+                if (meetingNode != null) {
+                    return state.buildPath(meetingNode);
+                }
 
-            if (meetingNode != null) {
-                return state.buildPath(meetingNode);
+                if (state.visitedForward.size() == 
+                    state.previousVisitedSizeForward) {
+                    return null;
+                }
+
+                state.previousVisitedSizeBackward =
+                        state.visitedBackward.size();
+                
+                state.visitedBackward.clear();
             }
             
-            if (state.visitedBackward.size() == 
-                state.previousVisitedSizeBackward) {
-                return null;
-            }
-            
-            state.previousVisitedSizeBackward = state.visitedBackward.size();
-            state.visitedBackward.clear();
-            
-            // Wipe out the frontier.
             state.frontier.clear();
         }
     }
@@ -129,7 +125,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             return null;
         }
         
-        visitedBackward.add(node);
+        visitedBackward.add(node);  
         backwardSearchStack.addFirst(node);
 
         if (depth == 0) {

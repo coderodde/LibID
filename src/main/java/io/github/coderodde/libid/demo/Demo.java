@@ -275,8 +275,8 @@ public final class Demo {
         }
     }
     
-    private static final int BENCHMARK_NODES = 300_000;
-    private static final int BENCHMARK_ARCS = 1_900_000;
+    private static final int BENCHMARK_NODES = 1_000_000;
+    private static final int BENCHMARK_ARCS = 10_000_000;
     private static final int WARMUP_ITERATIONS = 10;
     
     private static void benchmarkGeneralGraph(
@@ -597,10 +597,6 @@ public final class Demo {
             sourceNode.addChild(targetNode);
             targetNode.addChild(sourceNode);
             edges--;
-            
-            if (edges % 100_000 == 0) {
-                System.out.println(edges);
-            }
         }
         
         int actualEdges = 0;

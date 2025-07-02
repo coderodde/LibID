@@ -93,7 +93,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                             state.visitedBackwardStep1);
             
             if (meetingNode != null) {
-                return state.buildPath(meetingNode);
+                return state.buildPath();
             }
             
             state.visitedBackwardStep2.clear();
@@ -105,7 +105,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                             state.visitedBackwardStep2);
             
             if (meetingNode != null) {
-                return state.buildPath(meetingNode);
+                return state.buildPath();
             }
             
             if (state.visitedBackwardStep2.size() == 
@@ -128,8 +128,11 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         forwardSearchStack.addLast(node);
         
         if (depth == 0) {
+            if (!forwardSearchStack.isEmpty()) {
+                forwardSearchStack.removeLast();
+            }
+                
             frontier.add(node);
-//            forwardSearchStack.removeLast();
             return;
         }
 
@@ -175,18 +178,9 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         return null;
     }
 
-    private List<N> buildPath(N meetingNode) {
+    private List<N> buildPath() {
         List<N> path = new ArrayList<>(forwardSearchStack .size() + 
                                        backwardSearchStack.size());
-        
-        if (forwardSearchStack .getLast() .equals(meetingNode) &&
-            backwardSearchStack.getFirst().equals(meetingNode)) {
-            
-            forwardSearchStack.removeLast();
-            System.out.println("yes");
-        } else {
-            System.out.println("no");
-        }
         
         path.addAll(forwardSearchStack);
         path.addAll(backwardSearchStack);

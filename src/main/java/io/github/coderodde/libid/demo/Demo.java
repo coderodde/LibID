@@ -469,8 +469,19 @@ public final class Demo {
         }
         
         @Override
+        public boolean equals(Object o) {
+            GeneralDirectedGraphNode other = (GeneralDirectedGraphNode) o;
+            return id.equals(other.id);
+        }
+        
+        @Override 
+        public int hashCode() {
+            return id.hashCode();
+        }
+        
+        @Override
         public String toString() {
-            return "[GDGN: id = " + super.toString() + "]";
+            return "[GDGN: id = " + id + "]";
         }
     }
         

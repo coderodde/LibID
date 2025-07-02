@@ -41,6 +41,8 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
                         new GeneralDirectedGraphNodeForwardExpander(),
                         new GeneralDirectedGraphNodeBackwardExpander());
         
+        System.out.println("testSearchSmall: " + path);
+        
         assertEquals(4, path.size());
     }
     
@@ -71,6 +73,8 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
                                 d, 
                                 new GeneralDirectedGraphNodeForwardExpander(),
                                 new GeneralDirectedGraphNodeBackwardExpander());
+
+        System.out.println("testSearchSmall2: " + path);
         
         assertEquals(4, path.size());
     }

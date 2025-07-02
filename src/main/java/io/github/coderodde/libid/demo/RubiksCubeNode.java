@@ -1,5 +1,6 @@
 package io.github.coderodde.libid.demo;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -124,17 +125,19 @@ public final class RubiksCubeNode {
 
         RubiksCubeNode other = (RubiksCubeNode) o;
         
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
-                for (int z = 0; z < 3; z++) {
-                    if (data[x][y][z] != other.data[x][y][z]) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
+        return Arrays.deepEquals(data, other.data);
+        
+//        for (int x = 0; x < 3; x++) {
+//            for (int y = 0; y < 3; y++) {
+//                for (int z = 0; z < 3; z++) {
+//                    if (data[x][y][z] != other.data[x][y][z]) {
+//                        return false;
+//                    }
+//                }
+//            }
+//        }
+//
+//        return true;
     }
 
     @Override

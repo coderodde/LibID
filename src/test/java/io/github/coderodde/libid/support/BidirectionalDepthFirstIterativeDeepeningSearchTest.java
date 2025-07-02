@@ -17,12 +17,12 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
 
     @Test
     public void testSearchSmall() {
-        GeneralDirectedGraphNode a  = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b1 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b2 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c1 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c2 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode d  = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a  = new GeneralDirectedGraphNode("a");
+        GeneralDirectedGraphNode b1 = new GeneralDirectedGraphNode("b1");
+        GeneralDirectedGraphNode b2 = new GeneralDirectedGraphNode("b2");
+        GeneralDirectedGraphNode c1 = new GeneralDirectedGraphNode("c1");
+        GeneralDirectedGraphNode c2 = new GeneralDirectedGraphNode("c2");
+        GeneralDirectedGraphNode d  = new GeneralDirectedGraphNode("d");
         
         a.addChild(b1);
         a.addChild(b2);
@@ -46,13 +46,13 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testSearchSmall2() {
-        GeneralDirectedGraphNode a  = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b1 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b2 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c1 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c2 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c3 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode d  = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a  = new GeneralDirectedGraphNode("a");
+        GeneralDirectedGraphNode b1 = new GeneralDirectedGraphNode("b1");
+        GeneralDirectedGraphNode b2 = new GeneralDirectedGraphNode("b2");
+        GeneralDirectedGraphNode c1 = new GeneralDirectedGraphNode("c1");
+        GeneralDirectedGraphNode c2 = new GeneralDirectedGraphNode("c2");
+        GeneralDirectedGraphNode c3 = new GeneralDirectedGraphNode("c3");
+        GeneralDirectedGraphNode d  = new GeneralDirectedGraphNode("d");
         
         a.addChild(b1);
         a.addChild(c1);
@@ -77,9 +77,9 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testSearchSmallest() {
-        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode("a");
+        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode("b");
+        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode("c");
         
         a.addChild(b);
         b.addChild(c);
@@ -97,11 +97,11 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testOnCycleTargetNotReachable() {
-        GeneralDirectedGraphNode s  = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode a1 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode a2 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode a3 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode t  = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode s  = new GeneralDirectedGraphNode("s");
+        GeneralDirectedGraphNode a1 = new GeneralDirectedGraphNode("a1");
+        GeneralDirectedGraphNode a2 = new GeneralDirectedGraphNode("a2");
+        GeneralDirectedGraphNode a3 = new GeneralDirectedGraphNode("a3");
+        GeneralDirectedGraphNode t  = new GeneralDirectedGraphNode("t");
         
         a1.addChild(a2);
         a2.addChild(a3);
@@ -118,10 +118,10 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testSearchOnDisconnected() {
-        GeneralDirectedGraphNode a1 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode a2 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b1 = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b2 = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a1 = new GeneralDirectedGraphNode("a1");
+        GeneralDirectedGraphNode a2 = new GeneralDirectedGraphNode("a2");
+        GeneralDirectedGraphNode b1 = new GeneralDirectedGraphNode("b1");
+        GeneralDirectedGraphNode b2 = new GeneralDirectedGraphNode("b2");
         
         a1.addChild(a2);
         b1.addChild(b2);
@@ -139,10 +139,10 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testOmitMeetingNode() {
-        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode d = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode("a");
+        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode("b");
+        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode("c");
+        GeneralDirectedGraphNode d = new GeneralDirectedGraphNode("d");
         
         a.addChild(b);
         b.addChild(c);
@@ -162,10 +162,10 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testOmitStuck() {
-        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode d = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode("a");
+        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode("b");
+        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode("c");
+        GeneralDirectedGraphNode d = new GeneralDirectedGraphNode("d");
         
         a.addChild(b);
         b.addChild(c);
@@ -189,8 +189,8 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testShortPath() {
-        GeneralDirectedGraphNode source = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode target = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode source = new GeneralDirectedGraphNode("source");
+        GeneralDirectedGraphNode target = new GeneralDirectedGraphNode("target");
         source.addChild(target);
         
         Logger logger = Logger.getLogger(this.getClass().getSimpleName());
@@ -213,8 +213,8 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testWhenTerminalNodesAreNeighbors() {
-        GeneralDirectedGraphNode source = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode target = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode source = new GeneralDirectedGraphNode("source");
+        GeneralDirectedGraphNode target = new GeneralDirectedGraphNode("target");
         
         source.addChild(target);
         target.addChild(target);
@@ -229,10 +229,10 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void testFrontiersDoNotAgreeOnMeetingNode() {
-        GeneralDirectedGraphNode s = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode t = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode s = new GeneralDirectedGraphNode("s");
+        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode("a");
+        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode("b");
+        GeneralDirectedGraphNode t = new GeneralDirectedGraphNode("t");
         
         s.addChild(a);
         a.addChild(b);
@@ -249,11 +249,11 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
     
     @Test
     public void does() {
-        GeneralDirectedGraphNode s = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode();
-        GeneralDirectedGraphNode t = new GeneralDirectedGraphNode();
+        GeneralDirectedGraphNode s = new GeneralDirectedGraphNode("s");
+        GeneralDirectedGraphNode a = new GeneralDirectedGraphNode("a");
+        GeneralDirectedGraphNode b = new GeneralDirectedGraphNode("b");
+        GeneralDirectedGraphNode c = new GeneralDirectedGraphNode("c");
+        GeneralDirectedGraphNode t = new GeneralDirectedGraphNode("t");
         
         s.addChild(a);
         a.addChild(b);

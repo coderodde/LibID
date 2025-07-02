@@ -263,7 +263,6 @@ public final class Demo {
         Random random = new Random(seed);
         List<GeneralDirectedGraphNode> nodeList = 
                 getRandomDigraph(BENCHMARK_NODES,
-                                 BENCHMARK_ARCS,
                                  random);
         
         
@@ -446,8 +445,13 @@ public final class Demo {
     
     public static final class GeneralDirectedGraphNode {
         
+        private final String id;
         private final Set<GeneralDirectedGraphNode> children = new HashSet<>();
         private final Set<GeneralDirectedGraphNode> parents  = new HashSet<>();
+        
+        public GeneralDirectedGraphNode(String id) {
+            this.id = id;
+        }
         
         public Set<GeneralDirectedGraphNode> getChildren() {
             return Collections.<GeneralDirectedGraphNode>
@@ -572,14 +576,17 @@ public final class Demo {
         }
     }
     
-    private static List<GeneralDirectedGraphNode> getRandomDigraph(int nodes, 
-                                                            int arcs,
-                                                            Random random) {
+    private static List<GeneralDirectedGraphNode> getRandomDigraph(
+            int nodes,
+            Random random) {
+        
         List<GeneralDirectedGraphNode> nodeList = new ArrayList<>(nodes);
         
         IntStream.range(0, nodes)
                  .forEach(i -> {
-                     nodeList.add(new GeneralDirectedGraphNode()); 
+                     nodeList.add(
+                             new GeneralDirectedGraphNode(
+                                     Integer.toString(i))); 
                  });
         
         System.out.println("Nodes are ready.");
@@ -615,7 +622,7 @@ public final class Demo {
     
     private static void runRubiksCubeDemo() {
         final int rotations = 5;
-        final long seed = System.currentTimeMillis();
+        final long seed = 1750572292356L; //System.currentTimeMillis();
         Random random = new Random(seed);
         RubiksCubeNode targetRubiksCubeNode = new RubiksCubeNode();
         RubiksCubeNode sourceRubiksCubeNode = scramble(targetRubiksCubeNode,

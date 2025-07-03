@@ -14,34 +14,31 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     private final Deque<N> backwardSearchStack;
     private final Set<N> frontier;
     private final Set<N> visitedForward;
-    private final Set<N> visitedBackwardStep1;
-    private final Set<N> visitedBackwardStep2;
+    private final Set<N> visitedBackward;
     private final NodeExpander<N> forwardExpander;
     private final NodeExpander<N> backwardExpander;
     private int previousVisitedSizeForward;
     private int previousVisitedSizeBackward;
 
     public BidirectionalIterativeDeepeningDepthFirstSearch() {
-        this.backwardSearchStack  = null;
-        this.frontier             = null;
-        this.visitedForward       = null;
-        this.visitedBackwardStep1 = null;
-        this.visitedBackwardStep2 = null;
-        this.forwardExpander      = null;
-        this.backwardExpander     = null;
+        this.backwardSearchStack = null;
+        this.frontier            = null;
+        this.visitedForward      = null;
+        this.visitedBackward     = null;
+        this.forwardExpander     = null;
+        this.backwardExpander    = null;
     }
 
     private BidirectionalIterativeDeepeningDepthFirstSearch(
         NodeExpander<N> forwardExpander,
         NodeExpander<N> backwardExpander) {
         
-        this.backwardSearchStack  = new ArrayDeque<>();
-        this.frontier             = new HashSet<>();
-        this.visitedForward       = new HashSet<>();
-        this.visitedBackwardStep1 = new HashSet<>();
-        this.visitedBackwardStep2 = new HashSet<>();
-        this.forwardExpander      = forwardExpander;
-        this.backwardExpander     = backwardExpander;
+        this.backwardSearchStack = new ArrayDeque<>();
+        this.frontier            = new HashSet<>();
+        this.visitedForward      = new HashSet<>();
+        this.visitedBackward     = new HashSet<>();
+        this.forwardExpander     = forwardExpander;
+        this.backwardExpander    = backwardExpander;
     }
 
     public List<N> search(N source, 
@@ -79,39 +76,39 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             }
             
             state.previousVisitedSizeForward = state.visitedForward.size();
-            state.visitedBackwardStep1.clear();
+            state.visitedBackward.clear();
             
             N meetingNode = 
                     state.depthLimitedSearchBackward(
                             target,
                             forwardDepth,
-                            state.visitedBackwardStep1);
+                            state.visitedBackward);
             
             if (meetingNode != null) {
                 return state.buildPath(source, 
                                        meetingNode);
             }
             
-            state.visitedBackwardStep2.clear();
+            state.visitedBackward.clear();
             
             meetingNode = 
                     state.depthLimitedSearchBackward(
                             target, 
                             forwardDepth + 1, 
-                            state.visitedBackwardStep2);
+                            state.visitedBackward);
             
             if (meetingNode != null) {
                 return state.buildPath(source,
                                        meetingNode);
             }
             
-            if (state.visitedBackwardStep2.size() == 
+            if (state.visitedBackward.size() == 
                 state.previousVisitedSizeBackward) {
                 return null;
             }
             
             state.previousVisitedSizeBackward = 
-            state.visitedBackwardStep2.size();
+            state.visitedBackward.size();
         }
     }
 

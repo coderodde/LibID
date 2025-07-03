@@ -188,13 +188,17 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
                         new GeneralDirectedGraphNodeForwardExpander(),
                         new GeneralDirectedGraphNodeBackwardExpander());
         
-        assertEquals(4, path.size());
+            assertEquals(4, path.size());
     }
     
     @Test
     public void testShortPath() {
-        GeneralDirectedGraphNode source = new GeneralDirectedGraphNode("source");
-        GeneralDirectedGraphNode target = new GeneralDirectedGraphNode("target");
+        GeneralDirectedGraphNode source = 
+                new GeneralDirectedGraphNode("source");
+        
+        GeneralDirectedGraphNode target = 
+                new GeneralDirectedGraphNode("target");
+        
         source.addChild(target);
         
         Logger logger = Logger.getLogger(this.getClass().getSimpleName());

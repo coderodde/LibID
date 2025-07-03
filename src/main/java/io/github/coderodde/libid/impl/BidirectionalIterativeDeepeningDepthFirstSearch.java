@@ -144,12 +144,10 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
 
         if (depth == 0) {
             if (frontier.contains(node)) {
-//                backwardSearchStack.removeFirst();
                 return node;
             }
 
             backwardSearchStack.removeFirst();
-            visited.add(node);
             return null;
         }
         

@@ -16,7 +16,6 @@ public final class RubiksCubeNode {
     }
 
     private final int[][][] data;
-    private Set<RubiksCubeNode> neighbors;
 
     public static record Move(Axis axis, Layer layer, Direction direction) {}
 
@@ -55,14 +54,13 @@ public final class RubiksCubeNode {
     }
 
     public Set<RubiksCubeNode> computeNeighbors() {
-        if (neighbors != null)
-            return neighbors;
 
-        neighbors = new HashSet<>(18);
+        Set<RubiksCubeNode>neighbors = new HashSet<>(18);
         for (Axis axis : Axis.values())
             for (Layer layer : Layer.values())
                 for (Direction dir : Direction.values())
                     neighbors.add(rotate(axis, layer, dir));
+        
         return neighbors;
     }
 

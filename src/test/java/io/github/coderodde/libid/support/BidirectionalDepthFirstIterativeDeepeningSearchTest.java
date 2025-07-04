@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 import io.github.coderodde.libid.demo.Demo.GeneralDirectedGraphNode;
 import io.github.coderodde.libid.demo.Demo.GeneralDirectedGraphNodeBackwardExpander;
 import io.github.coderodde.libid.demo.Demo.GeneralDirectedGraphNodeForwardExpander;
-import static org.junit.Assume.assumeTrue;
 
 public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
 
@@ -161,7 +160,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
                         new GeneralDirectedGraphNodeForwardExpander(),
                         new GeneralDirectedGraphNodeBackwardExpander());
         
-        assumeTrue(Arrays.asList(a, b, d).equals(path));
+        assertTrue(Arrays.asList(a, b, c, d).equals(path));
     }
     
     @Test

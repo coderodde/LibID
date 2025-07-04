@@ -130,7 +130,7 @@ public final class Demo {
         long seed =  System.currentTimeMillis();
         Random random = new Random(seed);
         
-        warmup8PuzzleGraphBenchmark(random);
+        warmup15PuzzleGraphBenchmark(random);
         
         System.out.println("Seed = " + seed);
         SlidingTilePuzzleNode target = new SlidingTilePuzzleNode();
@@ -141,7 +141,7 @@ public final class Demo {
         // Declare finders:
         BreadthFirstSearch<SlidingTilePuzzleNode> finder1;
         
-        IterativeDeepeningDepthFirstSearch<SlidingTilePuzzleNode> finder2;
+//        IterativeDeepeningDepthFirstSearch<SlidingTilePuzzleNode> finder2;
         
         BidirectionalIterativeDeepeningDepthFirstSearch
                 <SlidingTilePuzzleNode> finder3;
@@ -152,7 +152,7 @@ public final class Demo {
         
         // Construct finders:
         finder1 = new BreadthFirstSearch<>();
-        finder2 = new IterativeDeepeningDepthFirstSearch<>();
+//        finder2 = new IterativeDeepeningDepthFirstSearch<>();
         finder3 = new BidirectionalIterativeDeepeningDepthFirstSearch<>();
         finder4 = new IterativeDeepeningAStar<>();
         finder5 = new BidirectionalBreadthFirstSearch<>();
@@ -166,14 +166,14 @@ public final class Demo {
         System.out.println(finder1.getClass().getSimpleName() + " in " +
                 (end - start) + " milliseconds. Path length: " + path1.size());
         
-        start = System.currentTimeMillis();
-        List<SlidingTilePuzzleNode> path2 = finder2.search(source,
-                                                           target, 
-                                                           expander);
-        end = System.currentTimeMillis();
-        
-        System.out.println(finder2.getClass().getSimpleName() + " in " +
-                (end - start) + " milliseconds. Path length: " + path2.size());
+//        start = System.currentTimeMillis();
+//        List<SlidingTilePuzzleNode> path2 = finder2.search(source,
+//                                                           target, 
+//                                                           expander);
+//        end = System.currentTimeMillis();
+//        
+//        System.out.println(finder2.getClass().getSimpleName() + " in " +
+//                (end - start) + " milliseconds. Path length: " + path2.size());
         
         start = System.currentTimeMillis();
         List<SlidingTilePuzzleNode> path3 = finder3.search(source,
@@ -207,7 +207,7 @@ public final class Demo {
                 (end - start) + " milliseconds. Path length: " + path5.size());
         
         System.out.println("Algorithms agree: " + 
-                tilePathsEqual(path1, path2, path3, path4, path5));
+                tilePathsEqual(path1, path3, path4, path5));
     }
     
     private static boolean
@@ -237,7 +237,7 @@ public final class Demo {
     
     private static final int WARMUP_MOVES = 10;
          
-    private static void warmup8PuzzleGraphBenchmark(Random random) {
+    private static void warmup15PuzzleGraphBenchmark(Random random) {
         SlidingTilePuzzleNode target = new SlidingTilePuzzleNode();
         SlidingTilePuzzleNode source = new SlidingTilePuzzleNode();
         NodeExpander<SlidingTilePuzzleNode> expander = 

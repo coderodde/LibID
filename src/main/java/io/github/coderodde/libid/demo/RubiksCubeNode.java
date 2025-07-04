@@ -17,8 +17,6 @@ public final class RubiksCubeNode {
 
     private final int[][][] data;
 
-    public static record Move(Axis axis, Layer layer, Direction direction) {}
-
     // Creates a solved cube
     public RubiksCubeNode() {
         this.data = new int[3][3][3];
@@ -45,11 +43,21 @@ public final class RubiksCubeNode {
 
     public RubiksCubeNode rotate(Axis axis, Layer layer, Direction direction) {
         int[][][] newData = deepCopyData();
+        
         switch (axis) {
-            case X -> rotateX(newData, layer.toIndex(), direction);
-            case Y -> rotateY(newData, layer.toIndex(), direction);
-            case Z -> rotateZ(newData, layer.toIndex(), direction);
+            case X:
+                rotateX(newData, layer.toIndex(), direction);
+                break;
+                
+            case Y:
+                rotateY(newData, layer.toIndex(), direction);
+                break;
+                
+            case Z:
+                rotateZ(newData, layer.toIndex(), direction);
+                break;
         }
+        
         return new RubiksCubeNode(newData);
     }
 
@@ -75,7 +83,7 @@ public final class RubiksCubeNode {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof RubiksCubeNode other && Arrays.deepEquals(this.data, other.data);
+        return Arrays.deepEquals(this.data, ((RubiksCubeNode) o).data);
     }
 
     @Override

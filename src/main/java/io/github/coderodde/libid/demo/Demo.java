@@ -33,7 +33,7 @@ public final class Demo {
         System.out.println();
     }
     
-    private static final int MOVES = 50;
+    private static final int MOVES = 30;
     
     private static void runGridBenchmark() {
         System.out.println("<<< runGridBenchmark() >>>");

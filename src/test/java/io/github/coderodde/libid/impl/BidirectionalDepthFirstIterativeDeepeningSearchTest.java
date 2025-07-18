@@ -1,4 +1,4 @@
-package io.github.coderodde.libid.support;
+package io.github.coderodde.libid.impl;
 
 import io.github.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
 import io.github.coderodde.libid.impl.BidirectionalIterativeDeepeningDepthFirstSearch;

@@ -46,11 +46,13 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                           NodeExpander<N> forwardExpander,
                           NodeExpander<N> backwardExpander) {
         // Handle the easy case. We need this in order to terminate the 
-        // recursion in buildPath.
+        // recursion in buildPath. Otherwise, if 'source' and 'target' are the
+        // same nodes, a stack overflow will occur.
         if (source.equals(target)) {
             return new ArrayList<>(Arrays.asList(source));
         }
 
+        // Get the actual search state:
         BidirectionalIterativeDeepeningDepthFirstSearch<N> state = 
                 new BidirectionalIterativeDeepeningDepthFirstSearch<>(
                         forwardExpander,
@@ -62,10 +64,9 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             state.visitedForward.clear();
             
             // Do a depth limited search in forward direction. Put all nodes at 
-            // depth == 0 to the frontier.
+            // depth == 0 to the 'frontier':
             state.depthLimitedSearchForward(source,
                                             forwardDepth);
-            
             
             if (state.visitedForward.size() == 
                 state.previousVisitedSizeForward) {
@@ -165,6 +166,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
 
     private List<N> buildPath(N source, N meetingNode) {
         List<N> path = new ArrayList<>();
+        
         List<N> prefixPath = 
                 new BidirectionalIterativeDeepeningDepthFirstSearch<N>()
                         .search(source, 

@@ -23,10 +23,10 @@ import io.github.coderodde.libid.impl.ManhattanHeuristicFunction;
 public final class Demo {
 
     public static void main(String[] args) {
-//        runGridBenchmark();
-//        System.out.println();
-//        runRubiksCubeDemo();
-//        System.out.println();
+        runGridBenchmark();
+        System.out.println();
+        runRubiksCubeDemo();
+        System.out.println();
         runGeneralGraphBenchmark();
         System.out.println();
         run15PuzzleGraphBenchmark();

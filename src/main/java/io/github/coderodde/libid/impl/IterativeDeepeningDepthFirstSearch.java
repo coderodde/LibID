@@ -70,7 +70,6 @@ public final class IterativeDeepeningDepthFirstSearch<N> {
         if (depth > 0) {
             for (N child : expander.expand(node)) {
                 if (visitedSet.contains(child)) {
-                    System.out.println("1");
                     continue;
                 }
                 

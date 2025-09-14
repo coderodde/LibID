@@ -25,8 +25,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             return new ArrayList<>(Arrays.asList(source));
         }
         
-        Set<N> visitedForward   = new HashSet<>();
-        Set<N> visitedBackward  = new HashSet<>();
         Set<N> frontier         = new HashSet<>();
         Deque<N> backwardStack  = new ArrayDeque<>();
         Map<N, N> parentForward = new HashMap<>();
@@ -35,100 +33,104 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         int previousBackward = -1;
         
         for (int depth = 0; ; ++depth) {
-            visitedForward.clear();
             frontier.clear();
             parentForward.clear();
             
             depthLimitedForward(source,
+                                null,
                                 depth,
-                                visitedForward,
+                                new HashSet<>(),
                                 frontier, 
                                 parentForward,
                                 forwardExpander);
             
-            if (visitedForward.size() == previousForward) {
+            if (frontier.isEmpty()) {
                 return null;
             }
             
-            previousForward = visitedForward.size();
-            
-            visitedBackward.clear();
             backwardStack.clear();
             
             N touch = depthLimitedBackward(target,
+                                           null,
                                            depth,
-                                           visitedBackward,
+                                           new HashSet<>(),
                                            frontier,
                                            backwardStack,
                                            backwardExpander);
             
             if (touch != null) {
-                return buildPath(source,
-                                 touch,
+                return buildPath(touch,
                                  parentForward,
                                  backwardStack);
             }
             
-            visitedBackward.clear();
             backwardStack.clear();
+            
             touch = depthLimitedBackward(target,
+                                         null,
                                          depth + 1,
-                                         visitedBackward,
+                                         new HashSet<>(),
                                          frontier,
                                          backwardStack,
                                          backwardExpander);
             
             if (touch != null) {
-                return buildPath(source,
-                                 touch,
+                return buildPath(touch,
                                  parentForward,
                                  backwardStack);
             }
-            
-            if (visitedBackward.size() == previousBackward) {
-                return null;
-            }
-            
-            previousBackward = visitedBackward.size();
         }
     }
 
     private void depthLimitedForward(N node,
-                                    int depth,
-                                    Set<N> visited,
-                                    Set<N> frontier,
-                                    Map<N, N> parents,
-                                    NodeExpander<N> expander) {
-        if (!visited.add(node)) {
+                                     N parent,
+                                     int depth,
+                                     Set<N> onPath,
+                                     Set<N> frontier,
+                                     Map<N, N> parents,
+                                     NodeExpander<N> expander) {
+        if (onPath.contains(node)) {
             return;
         }
         
+        onPath.add(node);
+        
         if (depth == 0) {
             frontier.add(node);
+            onPath.remove(node);
             return;
         }
         
         for (N child : expander.expand(node)) {
+            if (parent != null && child.equals(parent)) {
+                continue;
+            }
+            
             parents.putIfAbsent(child, node);
             depthLimitedForward(child,
+                                node,
                                 depth - 1,
-                                visited,
+                                onPath,
                                 frontier,
                                 parents,
                                 expander);
         }
+        
+        onPath.remove(node);
     }
 
     private N depthLimitedBackward(N node,
+                                   N child,
                                    int depth,
-                                   Set<N> visited,
+                                   Set<N> onPath,
                                    Set<N> frontier,
                                    Deque<N> backwardStack,
                                    NodeExpander<N> expander) {
-        if (visited.contains(node)) {
+        if (onPath.contains(node)) {
             return null;
         }
         
+        onPath.add(node);
         backwardStack.addFirst(node);
 
         if (depth == 0) {
@@ -137,15 +139,19 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             }
 
             backwardStack.removeFirst();
+            onPath.remove(node);
             return null;
         }
-        
-        visited.add(node);  
 
         for (N parent : expander.expand(node)) {
+            if (child != null && parent.equals(child)) {
+                continue;
+            }
+            
             N meetingNode = depthLimitedBackward(parent,
+                                                 node,
                                                  depth - 1,
-                                                 visited,
+                                                 onPath,
                                                  frontier,
                                                  backwardStack,
                                                  expander);
@@ -155,11 +161,11 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         }
 
         backwardStack.removeFirst();
+        onPath.remove(node);
         return null;
     }
 
-    private List<N> buildPath(N source,
-                              N meetingNode,
+    private List<N> buildPath(N meetingNode,
                               Map<N, N> parentForward,
                               Deque<N> backwardStack) {
         List<N> prefix = new ArrayList<>();

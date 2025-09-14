@@ -1,7 +1,5 @@
 package io.github.coderodde.libid.impl;
 
-import io.github.coderodde.libid.impl.BidirectionalBreadthFirstSearch;
-import io.github.coderodde.libid.impl.BidirectionalIterativeDeepeningDepthFirstSearch;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;

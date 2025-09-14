@@ -11,6 +11,7 @@ import io.github.coderodde.libid.NodeExpander;
 
 public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
 
+    private final Deque<N> forwardSearchStack;
     private final Deque<N> backwardSearchStack;
     private final Set<N> frontier;
     private final Set<N> visitedForward;
@@ -21,6 +22,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     private int previousVisitedSizeBackward;
 
     public BidirectionalIterativeDeepeningDepthFirstSearch() {
+        this.forwardSearchStack  = null;
         this.backwardSearchStack = null;
         this.frontier            = null;
         this.visitedForward      = null;
@@ -33,6 +35,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         NodeExpander<N> forwardExpander,
         NodeExpander<N> backwardExpander) {
         
+        this.forwardSearchStack  = new ArrayDeque<>();
         this.backwardSearchStack = new ArrayDeque<>();
         this.frontier            = new HashSet<>();
         this.visitedForward      = new HashSet<>();
@@ -62,6 +65,8 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         for (int forwardDepth = 0;; ++forwardDepth) {
             state.frontier.clear();
             state.visitedForward.clear();
+            state.forwardSearchStack.clear();
+            state.forwardSearchStack.addLast(source);
             
             // Do a depth limited search in forward direction. Put all nodes at 
             // depth == 0 to the 'frontier':
@@ -86,8 +91,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                             state.visitedBackward);
             
             if (meetingNode != null) {
-                return state.buildPath(source, 
-                                       meetingNode);
+                return state.buildPath();
             }
             
             state.visitedBackward.clear();
@@ -99,8 +103,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
                             state.visitedBackward);
             
             if (meetingNode != null) {
-                return state.buildPath(source,
-                                       meetingNode);
+                return state.buildPath();
             }
             
             if (state.visitedBackward.size() == 
@@ -119,9 +122,11 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         }
         
         visitedForward.add(node);
+        forwardSearchStack.addLast(node);
         
         if (depth == 0) {
             frontier.add(node);
+            forwardSearchStack.removeLast();
             return;
         }
 
@@ -129,6 +134,8 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             depthLimitedSearchForward(child,
                                       depth - 1);
         }
+        
+        forwardSearchStack.removeLast();
     }
 
     private N depthLimitedSearchBackward(N node, 
@@ -164,17 +171,15 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         return null;
     }
 
-    private List<N> buildPath(N source, N meetingNode) {
-        List<N> path = new ArrayList<>();
+    private List<N> buildPath() {
+        List<N> path = new ArrayList<>(forwardSearchStack.size() + 
+                                       backwardSearchStack.size());
         
-        List<N> prefixPath = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch<N>()
-                        .search(source, 
-                                meetingNode, 
-                                forwardExpander, 
-                                backwardExpander);
-        path.addAll(prefixPath);
-        path.remove(path.size() - 1);
+        if (forwardSearchStack.getLast().equals(backwardSearchStack.getFirst())) {
+            forwardSearchStack.removeLast();
+        }
+        
+        path.addAll(forwardSearchStack);
         path.addAll(backwardSearchStack);
         return path;
     }

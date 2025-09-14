@@ -158,6 +158,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
                         new GeneralDirectedGraphNodeForwardExpander(),
                         new GeneralDirectedGraphNodeBackwardExpander());
         
+        System.out.println("PATH: " + path);
         assertTrue(Arrays.asList(a, b, c, d).equals(path));
     }
     

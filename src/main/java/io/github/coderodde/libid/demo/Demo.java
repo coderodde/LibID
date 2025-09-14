@@ -25,7 +25,7 @@ public final class Demo {
     public static void main(String[] args) {
         runGridBenchmark();
         System.out.println();
-        runRubiksCubeDemo();
+//        runRubiksCubeDemo();
         System.out.println();
         runGeneralGraphBenchmark();
         System.out.println();

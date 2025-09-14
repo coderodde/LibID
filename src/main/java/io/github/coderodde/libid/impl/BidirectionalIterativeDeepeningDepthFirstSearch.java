@@ -4,10 +4,13 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import io.github.coderodde.libid.NodeExpander;
+import java.util.Collections;
 
 public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
 
@@ -18,8 +21,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     private final Set<N> visitedBackward;
     private final NodeExpander<N> forwardExpander;
     private final NodeExpander<N> backwardExpander;
-    private int previousVisitedSizeForward;
-    private int previousVisitedSizeBackward;
+    private final Map<N, N> parentForward;
 
     public BidirectionalIterativeDeepeningDepthFirstSearch() {
         this.forwardSearchStack  = null;
@@ -29,12 +31,13 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         this.visitedBackward     = null;
         this.forwardExpander     = null;
         this.backwardExpander    = null;
+        this.parentForward       = null;
     }
 
     private BidirectionalIterativeDeepeningDepthFirstSearch(
-        NodeExpander<N> forwardExpander,
-        NodeExpander<N> backwardExpander) {
-        
+            NodeExpander<N> forwardExpander,
+            NodeExpander<N> backwardExpander) {
+
         this.forwardSearchStack  = new ArrayDeque<>();
         this.backwardSearchStack = new ArrayDeque<>();
         this.frontier            = new HashSet<>();
@@ -42,145 +45,124 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         this.visitedBackward     = new HashSet<>();
         this.forwardExpander     = forwardExpander;
         this.backwardExpander    = backwardExpander;
+        this.parentForward       = new HashMap<>();
     }
 
-    public List<N> search(N source, 
-                          N target, 
+    public List<N> search(N source,
+                          N target,
                           NodeExpander<N> forwardExpander,
                           NodeExpander<N> backwardExpander) {
-        // Handle the easy case. We need this in order to terminate the 
-        // recursion in buildPath. Otherwise, if 'source' and 'target' are the
-        // same nodes, a stack overflow will occur.
+        
         if (source.equals(target)) {
             return new ArrayList<>(Arrays.asList(source));
         }
 
-        // Get the actual search state:
-        BidirectionalIterativeDeepeningDepthFirstSearch<N> state = 
+        BidirectionalIterativeDeepeningDepthFirstSearch<N> state =
                 new BidirectionalIterativeDeepeningDepthFirstSearch<>(
-                        forwardExpander,
+                        forwardExpander, 
                         backwardExpander);
 
-        // The actual search routine:
-        for (int forwardDepth = 0;; ++forwardDepth) {
+        for (int depth = 0; ; ++depth) {
             state.frontier.clear();
             state.visitedForward.clear();
+            state.visitedBackward.clear();
             state.forwardSearchStack.clear();
-            state.forwardSearchStack.addLast(source);
-            
-            // Do a depth limited search in forward direction. Put all nodes at 
-            // depth == 0 to the 'frontier':
-            state.depthLimitedSearchForward(source,
-                                            forwardDepth);
-            
-            if (state.visitedForward.size() == 
-                state.previousVisitedSizeForward) {
-                // No improvement since the last run of forward search. Return
-                // 'null' indicating that there is no path from source to 
-                // target:
+            state.backwardSearchStack.clear();
+            state.parentForward.clear();
+
+            state.depthLimitedSearchForward(source, depth);
+
+            if (state.frontier.isEmpty()) {
                 return null;
             }
-            
-            state.previousVisitedSizeForward = state.visitedForward.size();
-            state.visitedBackward.clear();
-            
-            N meetingNode = 
-                    state.depthLimitedSearchBackward(
-                            target,
-                            forwardDepth,
-                            state.visitedBackward);
-            
+
+            N meetingNode = state.depthLimitedSearchBackward(target, 
+                                                             depth);
             if (meetingNode != null) {
-                return state.buildPath();
+                return state.buildPathMeet(meetingNode);
             }
-            
+
             state.visitedBackward.clear();
-            
-            meetingNode = 
-                    state.depthLimitedSearchBackward(
-                            target, 
-                            forwardDepth + 1, 
-                            state.visitedBackward);
-            
+            state.backwardSearchStack.clear();
+
+            meetingNode = state.depthLimitedSearchBackward(target,
+                                                           depth + 1);
             if (meetingNode != null) {
-                return state.buildPath();
+                return state.buildPathMeet(meetingNode);
             }
-            
-            if (state.visitedBackward.size() == 
-                state.previousVisitedSizeBackward) {
-                return null;
-            }
-            
-            state.previousVisitedSizeBackward = 
-            state.visitedBackward.size();
         }
     }
 
+    // Forward DLS with visited set and parent recording.
     private void depthLimitedSearchForward(N node, int depth) {
-        if (visitedForward.contains(node)) {
+        if (!visitedForward.add(node)) {
             return;
         }
-        
-        visitedForward.add(node);
-        forwardSearchStack.addLast(node);
-        
+
         if (depth == 0) {
             frontier.add(node);
-            forwardSearchStack.removeLast();
             return;
         }
 
         for (N child : forwardExpander.expand(node)) {
-            depthLimitedSearchForward(child,
-                                      depth - 1);
+            if (!visitedForward.contains(child)) {
+                parentForward.put(child, node);
+            }
+            
+            depthLimitedSearchForward(child, depth - 1);
         }
-        
-        forwardSearchStack.removeLast();
     }
 
-    private N depthLimitedSearchBackward(N node, 
-                                         int depth,
-                                         Set<N> visited) {
-        if (visited.contains(node)) {
+    private N depthLimitedSearchBackward(N node, int depth) {
+        if (!visitedBackward.add(node)) {
             return null;
         }
-        
+
         backwardSearchStack.addFirst(node);
 
-        if (depth == 0) {
-            if (frontier.contains(node)) {
-                return node;
-            }
+        if (frontier.contains(node)) {
+            return node;
+        }
 
+        if (depth == 0) {
             backwardSearchStack.removeFirst();
             return null;
         }
-        
-        visited.add(node);  
 
         for (N parent : backwardExpander.expand(node)) {
             N meetingNode = depthLimitedSearchBackward(parent,
-                                                       depth - 1, 
-                                                       visited);
+                                                       depth - 1);
             if (meetingNode != null) {
                 return meetingNode;
-            } 
+            }
         }
 
         backwardSearchStack.removeFirst();
         return null;
     }
 
-    private List<N> buildPath() {
-        List<N> path = new ArrayList<>(forwardSearchStack.size() + 
-                                       backwardSearchStack.size());
+    private List<N> buildPathMeet(N meetingNode) {
+        List<N> prefix = buildPathForwardOnly(meetingNode);
+
+        List<N> path = new ArrayList<>(
+                prefix.size() + Math.max(0, backwardSearchStack.size() - 1));
         
-        if (forwardSearchStack.getLast().equals(backwardSearchStack.getFirst())) {
-            forwardSearchStack.removeLast();
-        }
-        
-        path.addAll(forwardSearchStack);
+        path.addAll(prefix);
+        backwardSearchStack.removeFirst();
         path.addAll(backwardSearchStack);
+        return path;
+    }
+
+    private List<N> buildPathForwardOnly(N targetOrMeeting) {
+        List<N> path = new ArrayList<>();
+        N current = targetOrMeeting;
+
+        while (current != null) {
+            path.add(current);
+            current = parentForward.get(current);
+        }
+
+        Collections.reverse(path);
         return path;
     }
 }

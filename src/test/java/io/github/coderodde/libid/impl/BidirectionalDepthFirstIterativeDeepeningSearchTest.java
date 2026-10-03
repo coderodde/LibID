@@ -31,7 +31,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         c2.addChild(d);
         
         List<GeneralDirectedGraphNode> path;
-        path = new BidirectionalIterativeDeepeningDepthFirstSearch
+        path = new BidirectionalIDDFS
                 <GeneralDirectedGraphNode>()
                 .search(a,
                         d,
@@ -64,7 +64,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         c3.addChild(d);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalIDDFS
                         <GeneralDirectedGraphNode>()
                         .search(a,
                                 d, 
@@ -86,7 +86,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b.addChild(c);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalIDDFS
                         <GeneralDirectedGraphNode>()
                         .search(a,
                                 c, 
@@ -109,7 +109,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         a3.addChild(a1);
         s.addChild(a1);
         
-        new BidirectionalIterativeDeepeningDepthFirstSearch
+        new BidirectionalIDDFS
                 <GeneralDirectedGraphNode>()
                 .search(s,
                         t,
@@ -128,7 +128,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b1.addChild(b2);
         
         List<GeneralDirectedGraphNode> path = 
-        new BidirectionalIterativeDeepeningDepthFirstSearch
+        new BidirectionalIDDFS
                 <GeneralDirectedGraphNode>()
                 .search(a1, 
                         b1, 
@@ -150,7 +150,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         c.addChild(d);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalIDDFS
                         <GeneralDirectedGraphNode>()
                 .search(
                         a, 
@@ -178,7 +178,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b.addChild(a);
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch
+                new BidirectionalIDDFS
                         <GeneralDirectedGraphNode>()
                 .search(
                         a, 
@@ -203,7 +203,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         logger.log(Level.ALL, "Before computing the path.");
         
         List<GeneralDirectedGraphNode> path = 
-                new BidirectionalIterativeDeepeningDepthFirstSearch<
+                new BidirectionalIDDFS<
                         GeneralDirectedGraphNode>()
                 .search(source,
                         target,
@@ -226,7 +226,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         target.addChild(target);
         source.addChild(source);
         
-        new BidirectionalBreadthFirstSearch<GeneralDirectedGraphNode>()
+        new BidirectionalBFS<GeneralDirectedGraphNode>()
                 .search(source, 
                         target, 
                         new GeneralDirectedGraphNodeForwardExpander(), 
@@ -245,7 +245,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b.addChild(t);
         
         List<GeneralDirectedGraphNode> path = 
-        new BidirectionalIterativeDeepeningDepthFirstSearch
+        new BidirectionalIDDFS
                 <GeneralDirectedGraphNode>()
                 .search(s, 
                         t, 
@@ -266,7 +266,7 @@ public class BidirectionalDepthFirstIterativeDeepeningSearchTest {
         b.addChild(c);
         c.addChild(a);
         
-        new BidirectionalIterativeDeepeningDepthFirstSearch
+        new BidirectionalIDDFS
                 <GeneralDirectedGraphNode>()
                 .search(s,
                         t, 

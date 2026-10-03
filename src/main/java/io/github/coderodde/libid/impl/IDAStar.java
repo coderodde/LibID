@@ -6,7 +6,7 @@ import java.util.List;
 import io.github.coderodde.libid.IntHeuristicFunction;
 import io.github.coderodde.libid.NodeExpander;
 
-public final class IterativeDeepeningAStar<N> {
+public final class IDAStar<N> {
 
     private static final int RUNNING = 0;
     private static final int FOUND = 1;
@@ -18,14 +18,14 @@ public final class IterativeDeepeningAStar<N> {
     
     private int status = RUNNING;
     
-    public IterativeDeepeningAStar() {
+    public IDAStar() {
         this.target = null;
         this.heuristicFunction = null;
         this.expander = null;
         this.path = null;
     }
     
-    private IterativeDeepeningAStar(
+    private IDAStar(
             N target,
             IntHeuristicFunction<N> heuristicFunction,
             NodeExpander<N> expander) {
@@ -39,8 +39,8 @@ public final class IterativeDeepeningAStar<N> {
                           N target, 
                           NodeExpander<N> expander, 
                           IntHeuristicFunction<N> heuristicFunction) {
-        IterativeDeepeningAStar<N> state = 
-                new IterativeDeepeningAStar<>(target,
+        IDAStar<N> state = 
+                new IDAStar<>(target,
                                               heuristicFunction, 
                                               expander);
         

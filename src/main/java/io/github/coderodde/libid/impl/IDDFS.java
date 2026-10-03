@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public final class IterativeDeepeningDepthFirstSearch<N> {
+public final class IDDFS<N> {
 
-    public IterativeDeepeningDepthFirstSearch() {}
+    public IDDFS() {}
 
     // Public entry point: returns path source->target or null if not found.
     public List<N> search(N source, N target, NodeExpander<N> expander) {

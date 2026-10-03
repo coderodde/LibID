@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import io.github.coderodde.libid.NodeExpander;
 
-public class BreadthFirstSearch<N> {
+public class BFS<N> {
 
     public List<N> search(N source, N target, NodeExpander<N> expander) {
         Deque<N> queue = new ArrayDeque<>(Arrays.asList(source));

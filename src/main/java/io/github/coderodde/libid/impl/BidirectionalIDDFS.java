@@ -12,9 +12,8 @@ import java.util.Set;
 import io.github.coderodde.libid.NodeExpander;
 import java.util.Collections;
 
-public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
+public final class BidirectionalIDDFS<N> {
 
-    private final Deque<N> forwardSearchStack;
     private final Deque<N> backwardSearchStack;
     private final Set<N> frontier;
     private final Set<N> visitedForward;
@@ -23,8 +22,7 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
     private final NodeExpander<N> backwardExpander;
     private final Map<N, N> parentForward;
 
-    public BidirectionalIterativeDeepeningDepthFirstSearch() {
-        this.forwardSearchStack  = null;
+    public BidirectionalIDDFS() {
         this.backwardSearchStack = null;
         this.frontier            = null;
         this.visitedForward      = null;
@@ -34,11 +32,10 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
         this.parentForward       = null;
     }
 
-    private BidirectionalIterativeDeepeningDepthFirstSearch(
+    private BidirectionalIDDFS(
             NodeExpander<N> forwardExpander,
             NodeExpander<N> backwardExpander) {
 
-        this.forwardSearchStack  = new ArrayDeque<>();
         this.backwardSearchStack = new ArrayDeque<>();
         this.frontier            = new HashSet<>();
         this.visitedForward      = new HashSet<>();
@@ -57,8 +54,8 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             return new ArrayList<>(Arrays.asList(source));
         }
 
-        BidirectionalIterativeDeepeningDepthFirstSearch<N> state =
-                new BidirectionalIterativeDeepeningDepthFirstSearch<>(
+        BidirectionalIDDFS<N> state =
+                new BidirectionalIDDFS<>(
                         forwardExpander, 
                         backwardExpander);
 
@@ -66,7 +63,6 @@ public final class BidirectionalIterativeDeepeningDepthFirstSearch<N> {
             state.frontier.clear();
             state.visitedForward.clear();
             state.visitedBackward.clear();
-            state.forwardSearchStack.clear();
             state.backwardSearchStack.clear();
             state.parentForward.clear();
 

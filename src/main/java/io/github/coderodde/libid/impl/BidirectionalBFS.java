@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import io.github.coderodde.libid.NodeExpander;
 
-public class BidirectionalBreadthFirstSearch<N> {
+public class BidirectionalBFS<N> {
     
     public List<N> search(N source,
                           N target,

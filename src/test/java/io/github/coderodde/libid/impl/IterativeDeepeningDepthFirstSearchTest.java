@@ -29,7 +29,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         c2.addChild(d);
         
         List<Demo.GeneralDirectedGraphNode> path;
-        path = new IterativeDeepeningDepthFirstSearch
+        path = new IDDFS
                 <Demo.GeneralDirectedGraphNode>()
                 .search(a,
                         d,
@@ -61,7 +61,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         c3.addChild(d);
         
         List<Demo.GeneralDirectedGraphNode> path = 
-                new IterativeDeepeningDepthFirstSearch
+                new IDDFS
                         <Demo.GeneralDirectedGraphNode>()
                         .search(a,
                                 d, 
@@ -82,7 +82,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         b.addChild(c);
         
         List<Demo.GeneralDirectedGraphNode> path = 
-                new IterativeDeepeningDepthFirstSearch
+                new IDDFS
                         <Demo.GeneralDirectedGraphNode>()
                         .search(a,
                                 c, 
@@ -104,7 +104,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         a3.addChild(a1);
         s.addChild(a1);
         
-        new IterativeDeepeningDepthFirstSearch
+        new IDDFS
                 <Demo.GeneralDirectedGraphNode>()
                 .search(s,
                         t,
@@ -122,7 +122,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         b1.addChild(b2);
         
         List<Demo.GeneralDirectedGraphNode> path = 
-        new IterativeDeepeningDepthFirstSearch
+        new IDDFS
                 <Demo.GeneralDirectedGraphNode>()
                 .search(a1, 
                         b1, 
@@ -143,7 +143,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         c.addChild(d);
         
         List<Demo.GeneralDirectedGraphNode> path = 
-                new IterativeDeepeningDepthFirstSearch
+                new IDDFS
                         <Demo.GeneralDirectedGraphNode>()
                 .search(
                         a, 
@@ -169,7 +169,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         b.addChild(a);
         
         List<Demo.GeneralDirectedGraphNode> path = 
-                new IterativeDeepeningDepthFirstSearch
+                new IDDFS
                         <Demo.GeneralDirectedGraphNode>()
                 .search(
                         a, 
@@ -193,7 +193,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         logger.log(Level.ALL, "Before computing the path.");
         
         List<Demo.GeneralDirectedGraphNode> path = 
-                new IterativeDeepeningDepthFirstSearch<
+                new IDDFS<
                         Demo.GeneralDirectedGraphNode>()
                 .search(source,
                         target,
@@ -215,7 +215,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         target.addChild(target);
         source.addChild(source);
         
-        new BreadthFirstSearch<Demo.GeneralDirectedGraphNode>()
+        new BFS<Demo.GeneralDirectedGraphNode>()
                 .search(source, 
                         target, 
                         new Demo.GeneralDirectedGraphNodeForwardExpander());
@@ -233,7 +233,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         b.addChild(t);
         
         List<Demo.GeneralDirectedGraphNode> path = 
-        new IterativeDeepeningDepthFirstSearch
+        new IDDFS
                 <Demo.GeneralDirectedGraphNode>()
                 .search(s, 
                         t, 
@@ -253,7 +253,7 @@ public class IterativeDeepeningDepthFirstSearchTest {
         b.addChild(c);
         c.addChild(a);
         
-        new IterativeDeepeningDepthFirstSearch
+        new IDDFS
                 <Demo.GeneralDirectedGraphNode>()
                 .search(s,
                         t, 
